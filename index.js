@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 
-const Sequelize = require('sequelize');
+const sequelize = require('./src/models/index');
 const config = require('./src/config/server');
 
 const app = express();
@@ -41,22 +41,10 @@ app.listen(port, function(error){
 })
 
 
-// Kết nối database
-const sequelize = new Sequelize(
-    config.db.database,
-    config.db.username, 
-    config.db.password, 
-    {
-        host: config.db.host,
-        port: config.db.port,
-        dialect: config.db.dialect
-    }
-);
-
-sequelize.authenticate().then(() => {
-    console.log('Connection has been established successfully.');
- }).catch((error) => {
-    console.error('Unable to connect to the database: ', error);
- });
+// sequelize.authenticate().then(() => {
+//     console.log('Connection has been established successfully.');
+//  }).catch((error) => {
+//     console.error('Unable to connect to the database: ', error);
+//  });
 
 
