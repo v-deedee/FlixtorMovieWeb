@@ -1,0 +1,28 @@
+head
+    link(rel='stylesheet' href='/style/style3.css')
+    script(src="https://kit.fontawesome.com/1de5e0d4fc.js" crossorigin="anonymous")
+body
+    - const genres = ['Action', 'Drama', 'Adventure', 'Comedy', 'Fantasy', 'Mystery', 'Romance', 'Science fiction']
+    .navbar
+        .logo
+            a(href='#')
+                i.fa-solid.fa-film
+                strong Flixtor
+        ul.options
+            li.items
+                a(href='#') HOME
+            li.items
+                a(href='#') GENRE
+                ul.sub-items
+                    each genre in genres
+                        li
+                            a(href='#')
+                                p= genre 
+            li.items
+                a(href='#') MOVIES
+            li.items
+                a(href='#') TOP IMDB
+        .login
+            a(href='#')
+                i.fa-solid.fa-user
+                |Login/Register   

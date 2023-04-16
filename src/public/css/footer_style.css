@@ -1,0 +1,66 @@
+body {
+    margin: 0px;
+    background-color: white;
+    font-family: sans-serif;
+    font-size: 12px;
+}
+
+#footer {
+    display: flex;
+    background-color: black;
+}
+
+.col-item {
+    padding: 32px 80px;
+    flex: 1;
+}
+
+.logo {
+    display: inline-block;
+    color:aquamarine;
+    font-size:xx-large;
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+.title {
+    color: orange;
+}
+
+.detail {
+    color: white;
+}
+
+.detail i {
+    color:orange;
+}
+
+.detail li {
+    margin-left: -40px;
+    padding: 12px 0px 0px 0px;
+    list-style: none;
+}
+
+.detail a {
+    text-decoration: none;
+    color: lightgray;
+}
+
+.detail a:hover {
+    color:white;
+}
+
+li.wallet {
+    list-style: circle;
+    font-size: xx-large;
+    display: inline-block;
+    margin: 0px 60px 0px -40px;
+}
+
+li.wallet i {
+    color:antiquewhite
+}
+
+li.wallet i:hover {
+    color:blue
+}
