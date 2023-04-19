@@ -1,5 +1,6 @@
 const models = require('../../models/index');
 const User = models.user;
+const watchList = models.watch_list;
 const Sequelize = models.sequelize;
 const authConfig = require('../../config/auth');
 
@@ -16,6 +17,10 @@ exports.signup = async (req, res) => {
         role: 'client',
         ban:0,
         create_at: Sequelize.literal('NOW()'),
+      });
+
+      const watch_list = await watchList.create({
+        user_id: user.id
       });
 
       res.json({ message: "User registered successfully!" });
