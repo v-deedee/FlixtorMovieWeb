@@ -1,0 +1,39 @@
+head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    title Bootstrap header
+    link(href="/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet")
+    script(src="https://kit.fontawesome.com/1de5e0d4fc.js" crossorigin="anonymous")
+body
+    - const genres = ["Action", "Drama", "Adventure", "Comedy", "Fantasy", "Mystery", "Romance", "Science fiction"]
+    - var verified = false
+    - var username = "deedee"
+    .navbar.fixed-top.bg-body-tertiary.navbar-expand-sm(data-bs-theme="dark")
+        .container-fluid.d-flex.justify-content-between
+            a.navbar-brand(href="#")
+                i.fa-solid.fa-film
+                |Flixtor
+            .navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#headerNav")
+                span.navbar-toggler-icon
+            .collapse.navbar-collapse#headerNav.justify-content-center
+                ul.navbar-nav
+                    li.nav-item
+                        a.nav-link(href="#") HOME
+                    li.nav-item.dropdown.px-sm-4
+                        a.nav-link.dropdown-toggle(href="#" role="button" data-bs-toggle="dropdown") GENRE
+                        ul.dropdown-menu
+                            li
+                                each genre in genres
+                                    a.dropdown-item(href="#")= genre
+                    li.nav-item.px-sm-4
+                        a.nav-link(href="#") MOVIES
+                    li.nav-item
+                        a.nav-link(href="#") TOP IMDB
+            a.btn.btn-outline-light(href="#" role="button")
+                if verified
+                    i.fa-solid.fa-user
+                    =username
+                else
+                    |Login
+
+    script(src="/node_modules/bootstrap/dist/js/bootstrap.bundle.js")
