@@ -9,7 +9,7 @@
 //-     body
 - const genres_col1 = ["Action", "Crime", "Thriller", "Drama", "Comedy", "Biography", "Family", "History", "Music", "Romance", "Western"]
 - const genres_col2 = ["Adventure", "Costome", "Horror", "Sci-Fi", "War", "Sport", "Animation", "Fantasy", "Documentary", "Mystery", "Kungfu"]
-header.navbar.fixed-top.bg-body-tertiary.navbar-expand-sm(data-bs-theme="dark")
+header.navbar.bg-body-tertiary.navbar-expand-md(data-bs-theme="dark")
     .container
         a.navbar-brand.p-0(href="/" style="color: var(--bs-teal); font-size: 1.5rem")
             i.fa-solid.fa-film
@@ -18,7 +18,7 @@ header.navbar.fixed-top.bg-body-tertiary.navbar-expand-sm(data-bs-theme="dark")
             span.navbar-toggler-icon
         .collapse.navbar-collapse#headerNav.justify-content-center
             ul.navbar-nav
-                li.nav-item
+                li.nav-item.px-sm-4
                     a.nav-link(href="/") HOME
                 li.nav-item.dropdown.px-sm-4
                     a.nav-link.dropdown-toggle(href="#" role="button" data-bs-toggle="dropdown") GENRE
@@ -31,9 +31,9 @@ header.navbar.fixed-top.bg-body-tertiary.navbar-expand-sm(data-bs-theme="dark")
                                 each genre in genres_col2
                                     a.dropdown-item.px-2.mx-2(href="#")= genre
                 li.nav-item.px-sm-4
-                    a.nav-link(href="/account/watch_list") MOVIES
-                li.nav-item
-                    a.nav-link(href="#") TOP IMDB
+                    a.nav-link(href="/movie") MOVIES
+                li.nav-item.px-sm-4
+                    a.nav-link.text-nowrap(href="#") TOP IMDB
         if verified
             a.btn.btn-outline-light(href="/account/profile" role="button")
                 i.fa-solid.fa-user.p-1
