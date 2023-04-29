@@ -7,9 +7,7 @@ verifyToken = (req, res, next) => {
     let token = req.session.token;
   
     if (!token) {
-      return res.status(403).json({
-        message: "No token provided!",
-      });
+      return res.redirect('/guest'); // Chuyển hướng sang trang /guest nếu không có token
     }
   
     jwt.verify(token, authConfig.secret, (err, decoded) => {
@@ -56,6 +54,7 @@ isUser = async (req, res, next) => {
       });
   }
 };
+
 
 const authJwt = {
     isAdmin,
