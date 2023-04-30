@@ -7,7 +7,9 @@ verifyToken = (req, res, next) => {
     let token = req.session.token;
   
     if (!token) {
-      return res.redirect('/guest'); // Chuyển hướng sang trang /guest nếu không có token
+      return res.status(403).json({
+        message: "No token provided!",
+      });
     }
   
     jwt.verify(token, authConfig.secret, (err, decoded) => {
