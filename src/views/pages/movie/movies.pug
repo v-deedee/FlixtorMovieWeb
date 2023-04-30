@@ -13,8 +13,7 @@ html(lang="en")
 
     main
       //- search field
-      //- form(action="/search", method="get")
-      form(action="#" method="get")
+      form(action="/movie/search" method="get")
         div.form-group.text-bg-dark(style="padding:1em 20vw")
           .input-group
             span.input-group-text.p-3
@@ -23,78 +22,77 @@ html(lang="en")
             button.btn.btn-info.text-light(type="submit")
               i.fa-solid.fa-arrow-right.fa-xl.p-2
       //- search result section
-      if results && results.length > 0
-        .container.mt-3
-          h2.mb-3(style="color: var(--bs-success-text-emphasis)" data-bs-theme="dark")
-            u Search results
-          .row.row-cols-auto
-            each movie in results
-              .col-xxl-2.mb-5
-                .movie-iteme
-                  a.text-decoration-none.text-dark(href=`/movie/${movie.id}`)
-                    img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
-                    .bg-body-tertiary(style="width:200px")
-                      h5.text-nowrap= movie.title
-                      .d-flex.flex-row.justify-content-between
-                        .d-flex.flex-row
-                          p.my-0.mx-1= movie.release.substr(0, 4)
-                          p.my-0.mx-1 |
-                          p.my-0.mx-1.rating
-                            span.rating-value= movie.rating
-                            span.fa.fa-star.text-warning
-                        .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie
-      else
-        //- filter section
-        .container.mt-3
-          h2.mb-3.text-success-emphasis(data-bs-theme="dark")
-            u Movies
-          .row.row-cols-auto.mx-0.mb-3.bg-primary-subtle.rounded
-            b.col-xxl-2.p-3.d-flex.flex-row.text-secondary
-              .m-0.fs-4 Genre:
-              select.form-select.mx-1
-                option(selected) All
-                each genre in genres_col1
-                    option.px-2.mx-2= genre
-                each genre in genres_col2
-                    option.px-2.mx-2= genre
-            - const countries = ["Argentina", "Brazil", "Canada", "Denmark", "France", "Germany", "Japan", "UK", "US", "Vietnam"]
-            b.col-xxl-2.p-3.d-flex.flex-row.text-secondary
-              .m-0.fs-4 Country:
-              select.form-select.mx-1
-                option(selected) All
-                each country in countries
-                  option= country
-            - var year = 2023
-            b.col-xxl-2.p-3.d-flex.flex-row.text-secondary
-              .m-0.fs-4 Year:
-              select.form-select.mx-1
-                option(selected) All
-                while year >= 2010
-                  option= year--
-            .col-xxl-2.p-2
-              button.btn.btn-warning.m-2.text-light.text-nowrap(type="submit")
-                i.fa-solid.fa-filter.me-2
-                |Filter
-          
-          //- movies section
-          if movies && movies.length > 0
-            .container.p-0
-              .row.row-cols-auto
-                each movie in movies
-                  .col-xxl-2.mb-5
-                    .movie-iteme
-                      a.text-decoration-none.text-dark(href=`/movie/${movie.id}`)
-                        img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
-                        .bg-body-tertiary(style="width:200px")
-                          h5.text-nowrap= movie.title
-                          .d-flex.flex-row.justify-content-between
-                            .d-flex.flex-row
-                              p.my-0.mx-1= movie.release.substr(0, 4)
-                              p.my-0.mx-1 |
-                              p.my-0.mx-1.rating
-                                span.rating-value= movie.rating
-                                span.fa.fa-star.text-warning
-                            .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie
+      //- if results && results.length > 0
+      //-   .container.mt-3
+      //-     h2.mb-3(style="color: var(--bs-success-text-emphasis)" data-bs-theme="dark")
+      //-       u Search results
+      //-     .row.row-cols-auto
+      //-       each movie in results
+      //-         .col-xxl-2.mb-5
+      //-           .movie-iteme
+      //-             a.text-decoration-none.text-dark(href=`/movie/${movie.id}`)
+      //-               img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
+      //-               .bg-body-tertiary(style="width:200px")
+      //-                 h5.text-nowrap= movie.title
+      //-                 .d-flex.flex-row.justify-content-between
+      //-                   .d-flex.flex-row
+      //-                     p.my-0.mx-1= movie.release.substr(0, 4)
+      //-                     p.my-0.mx-1 |
+      //-                     p.my-0.mx-1.rating
+      //-                       span.rating-value= movie.rating
+      //-                       span.fa.fa-star.text-warning
+      //-                   .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie
+      //- else
+      .container.mt-3
+        h2.mb-3.text-success-emphasis(data-bs-theme="dark")
+          u Movies
+        //- filter section  
+        form.row.row-cols-auto.mx-0.mb-3.bg-primary-subtle.rounded(action="/movie/filter" method="GET")
+          b.col-xxl-3.p-3.text-secondary
+            label.m-0(for='year') Year:
+              select.form-select(name='year')
+                option(value='') Select Year
+                - for(let i = 2023; i >= 1960; i--) {
+                  option(value=`${i}`) #{i}
+                - }
+          b.col-xxl-3.p-3.text-secondary
+            label.m-0(for='gerne') Gerne:
+              select.form-select(name='gerne')
+                - const genres = ["Action", "Crime", "Thriller", "Drama", "Comedy", "Biography", "Family", "History", "Music", "Romance", "Western", "Adventure", "Costome", "Horror", "Sci-Fi", "War", "Sport", "Animation", "Fantasy", "Documentary", "Mystery", "Kungfu"]
+                option(value='') Select Genre
+                each genre in genres
+                  option(value= `${genre}`)= genre
+          b.col-xxl-3.p-3.text-secondary
+            label.m-0(for='country') Country:
+              select.form-select(name='country')
+                option(value='') Select Country
+                option(value='United States') United States
+                option(value='France') France
+                option(value='Italy') Italy
+          .col-xxl-3.p-2.d-flex.align-items-end
+            button.btn.btn-warning.m-2.text-light.text-nowrap(type='submit')
+              i.fa-solid.fa-filter.me-2
+              |Filter
+
+        //- movies section
+        if movies && movies.length > 0
+          .container.p-0
+            .row.row-cols-auto
+              each movie in movies
+                .col-xxl-2.mb-5
+                  .movie-iteme
+                    a.text-decoration-none.text-dark(href=`/movie/${movie.id}`)
+                      img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
+                      .bg-body-tertiary(style="width:200px")
+                        h5.text-nowrap= movie.title
+                        .d-flex.flex-row.justify-content-between
+                          .d-flex.flex-row
+                            p.my-0.mx-1= movie.release.substr(0, 4)
+                            p.my-0.mx-1 |
+                            p.my-0.mx-1.rating
+                              span.rating-value= movie.rating
+                              span.fa.fa-star.text-warning
+                          .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie
 
     include ../../partials/footer.pug
 
