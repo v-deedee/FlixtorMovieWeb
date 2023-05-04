@@ -1,14 +1,14 @@
 const models = require('../../models/index');
-const movie = models.movie;
+const Movie = models.movie;
 const Gerne = models.gerne;
-const category = models.category;
-const producer = models.producer;
+const Category = models.category;
+const Producer = models.producer;
+const User = models.user;
 const { Op } = require('sequelize');
 
 module.exports.getAllMovies = async (req, res) => {
   try {
-    const movies = await movie.findAll({
-      order: [['create_at', 'DESC']]
+    const movies = await Movie.findAll({
     });
 
     res.render('movie/movies', { title: 'All Movies', movies});
@@ -22,9 +22,28 @@ module.exports.getAllMovies = async (req, res) => {
 
 module.exports.filterMovies = async (req, res) => {
   const { year, gerne, country } = req.query;
+  const sort = req.query.sort;
+  let sortOption = {};
+
+  switch (sort) {
+    case 'create_at':
+      sortOption = [['create_at', 'DESC']];
+      break;
+    case 'release':
+      sortOption = [['release', 'DESC']];
+      break;
+    case 'title':
+      sortOption = [['title', 'ASC']];
+      break;
+    case 'rating':
+      sortOption = [['rating', 'DESC']];
+      break;
+    default:
+      sortOption = [];
+  }
 
   try {
-    const movies = await movie.findAll({
+    const movies = await Movie.findAll({
       where: {
         release: {
           [Op.between]: [year ? `${year}-01-01` : '0001-01-01', year ? `${year}-12-31` : '9999-12-31']
@@ -32,7 +51,7 @@ module.exports.filterMovies = async (req, res) => {
       },
       include: [
         {
-          model: producer,
+          model: Producer,
           where: {
             country: country || { [Op.ne]: null }
           }
@@ -43,9 +62,10 @@ module.exports.filterMovies = async (req, res) => {
             name: gerne || { [Op.ne]: null }
           }
         }
-      ]
+      ],
+      order: sortOption
     });
-    res.render('movie/movies', { title: 'All Movies', movies });
+    res.render('movie/movies', { title: 'Filtered Movies', movies });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: 'Internal server error' });
@@ -56,7 +76,7 @@ module.exports.filterMovies = async (req, res) => {
 module.exports.search = async (req, res) => {
   const { keyword } = req.query;
   try {
-    const results = await movie.findAll({
+    const results = await Movie.findAll({
       where: {
         title: {
           [Op.like]: `%${keyword}%`

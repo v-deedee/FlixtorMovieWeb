@@ -12,32 +12,35 @@ html(lang="en")
     include ../partials/header.pug
 
     main
-    form(action='../movie/search', method='get')
-      div.form-group
-        label(for='keyword') Search
-        input.form-control(type='text', name='keyword', placeholder='Enter movie title')
-        button.btn.btn-primary(type='submit') Submit
-    if results && results.length > 0
-      h2 Search Results
-      .container.p-0
-              .row.row-cols-auto
-                each movie in results
-                  .col-xxl-2.mb-5
-                              .movie-iteme
-                                a.text-decoration-none.text-dark(href=`/movie/${movie.id}`)
-                                  img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
-                                  .bg-body-tertiary(style="width:200px")
-                                    h5.text-nowrap= movie.title
-                                    .d-flex.flex-row.justify-content-between
-                                      .d-flex.flex-row
-                                        p.my-0.mx-1= movie.release.substr(0, 4)
-                                        p.my-0.mx-1 |
-                                        p.my-0.mx-1.rating
-                                          span.rating-value= movie.rating
-                                          span.fa.fa-star.text-warning
-                                      .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie
-    else
-      p
+        form(action="/movie/search" method="get")
+          div.form-group.text-bg-dark(style="padding:1em 20vw")
+            .input-group
+              span.input-group-text.p-3
+                i.fa-solid.fa-magnifying-glass.fa-lg
+              input.form-control.p-3(type="text", name="keyword", placeholder="Enter movie title")
+              button.btn.btn-info.text-light(type="submit")
+                i.fa-solid.fa-arrow-right.fa-xl.p-2
+          if results && results.length > 0
+            h2 Search Results
+            .container.p-0
+                    .row.row-cols-auto
+                      each movie in results
+                        .col-xxl-2.mb-5
+                                    .movie-iteme
+                                      a.text-decoration-none.text-dark(href=`/movie/${movie.id}`)
+                                        img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
+                                        .bg-body-tertiary(style="width:200px")
+                                          h5.text-nowrap= movie.title
+                                          .d-flex.flex-row.justify-content-between
+                                            .d-flex.flex-row
+                                              p.my-0.mx-1= movie.release.substr(0, 4)
+                                              p.my-0.mx-1 |
+                                              p.my-0.mx-1.rating
+                                                span.rating-value= movie.rating
+                                                span.fa.fa-star.text-warning
+                                            .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie
+          else
+            p
     section
       if hotMovies && hotMovies.length > 0
         h2.hot-movies Hot Movies
@@ -60,11 +63,11 @@ html(lang="en")
                                       .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie
 
     section
-      if latestMovies && latestMovies.length > 0
+      if latestUpdate && latestUpdate.length > 0
         h2.latest-movies Latest Update Movies
         .container.p-0
               .row.row-cols-auto
-                each movie in latestMovies
+                each movie in latestUpdate
                     .col-xxl-2.mb-5
                           .movie-iteme
                             a.text-decoration-none.text-dark(href=`/movie/${movie.id}`)
@@ -80,11 +83,11 @@ html(lang="en")
                                       span.fa.fa-star.text-warning
                                   .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie
     section
-      if movieInWatchList && movieInWatchList.length > 0
+      if watchList && watchList.length > 0 && verified === true
         h2 Your Watch List
         .container.p-0
               .row.row-cols-auto
-                each movie in movieInWatchList
+                each movie in watchList
                   .col-xxl-2.mb-5
                           .movie-iteme
                             a.text-decoration-none.text-dark(href=`/movie/${movie.id}`)
@@ -99,7 +102,7 @@ html(lang="en")
                                       span.rating-value= movie.rating
                                       span.fa.fa-star.text-warning
                                   .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie
-                                  
+
     include ../partials/footer.pug
 
     script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js")
