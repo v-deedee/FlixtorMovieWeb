@@ -1,7 +1,7 @@
 const homeRouter = require("./home.route");
 const accountRouter = require("./account.route");
 const managementRouter = require("./management.route");
-const movieRouter = require('./movie.route')
+const movieRouter = require('./movie.route');
 
 function routes(app) {
   app.use("/", homeRouter);

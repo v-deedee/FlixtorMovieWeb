@@ -38,7 +38,7 @@
 .selected-country::after,
 .selected-sort::after {
     content: "";
-    background: url("/images/down-arrow-white.png");
+    background: url("/images/down-arrow.png");
     background-size: contain;
     background-repeat: no-repeat;
 

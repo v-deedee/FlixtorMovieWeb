@@ -6,12 +6,13 @@ const Producer = models.producer;
 const User = models.user;
 const { Op } = require('sequelize');
 
-module.exports.getAllMovies = async (req, res) => {
+module.exports.getAlltopIMDb = async (req, res) => {
   try {
-    const movies = await Movie.findAll({
+    const topIMDb = await Movie.findAll({
+      order: [['rating', 'DESC']]
     });
   
-    res.render('movie/movies', { title: 'All Movies', movies});
+    res.render('movie/topIMDb', { title: 'Top IMDb', topIMDb});
 
   } catch (err) {
     console.log(err);
@@ -54,7 +55,7 @@ module.exports.filterMovies = async (req, res) => {
   }
 
   try {
-    const movies = await Movie.findAll({
+    const topIMDb = await Movie.findAll({
       where: {
         release: {
           [Op.between]: getReleaseDateBetween(year)
@@ -76,7 +77,7 @@ module.exports.filterMovies = async (req, res) => {
       ],
       order: sortOption
     });
-    res.render('movie/movies', { title: 'Filtered Movies', movies });
+    res.render('movie/topIMDb', { title: 'Filtered Movies', topIMDb });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: 'Internal server error' });
@@ -94,7 +95,7 @@ module.exports.search = async (req, res) => {
         }
       }
     });
-    res.render('movie/movies', {
+    res.render('movie/topIMDb', {
       title: 'Search Results',
       results: results || [] 
     });
@@ -103,3 +104,4 @@ module.exports.search = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
+
