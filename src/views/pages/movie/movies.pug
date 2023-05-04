@@ -5,7 +5,7 @@ html(lang="en")
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous")
-    link(rel="stylesheet" type="text/css" href="/css/home.css")
+    link(rel="stylesheet" type="text/css" href="/css/movies.css")
     script(src="https://kit.fontawesome.com/1de5e0d4fc.js" crossorigin="anonymous")
 
   body
@@ -48,62 +48,111 @@ html(lang="en")
           u Movies
 
         //- filter section  
-        form.row.row-cols-auto.mx-0.mb-2.bg-primary-subtle.rounded(action="/movie/filter" method="GET")
+        form.row.row-cols-auto.mx-0.mb-3.bg-primary-subtle.rounded(action="/movie/filter" method="GET")
           b.col-xxl-2.p-3.text-secondary
-            label.m-0(for='year') Year:
-            select.form-select(name='year')
-              option(value='') Select Year
-              - for(let i = 2023; i >= 2020; i--) {
-                option(value=i) #{i}
-              - }
-              option(value='2020s') 2020s
-              - for(let i = 2019; i >= 2010; i--) {
-                option(value=i) #{i}
-              - }
-              option(value='2010s') 2010s
-              - for(let i = 2009; i >= 2000; i--) {
-                option(value=i) #{i}
-              - }
-              option(value='2000s') 2000s
-              - for(let i = 1999; i >= 1990; i--) {
-                option(value=i) #{i}
-              - }
-              option(value='1990s') 1990s
-              - for(let i = 1989; i >= 1980; i--) {
-                option(value=i) #{i}
-              - }
-              option(value='1980s') 1980s
-              - for(let i = 1979; i >= 1970; i--) {
-                option(value=i) #{i}
-              - }
-              option(value='1970s') 1970s
-              - for(let i = 1969; i >= 1960; i--) {
-                option(value=i) #{i}
-              - }
-              option(value='1960s') 1960s
+            .select-box
+              label.m-0(for="year") Year:
+              .options-container-year
+                - for(let i = 2023; i >= 2020; i--) {
+                  div
+                    input.radio(name="year" type="radio" id=`${i}` value=`${i}`)
+                    label.option(for=`${i}`) #{i}
+                - }
+                  div
+                    input.radio(name="year" type="radio" id='year-2020s' value="2020s")
+                    label.option(for="year-2020s") 2020s
+                - for(let i = 2019; i >= 2010; i--) {
+                  div
+                    input.radio(name="year" type="radio" id=`${i}` value=`${i}`)
+                    label.option(for=`${i}`) #{i}
+                - }
+                  div
+                    input.radio(name="year" type="radio" id='year-2010s' value="2010s")
+                    label.option(for="year-2010s") 2010s
+                - for(let i = 2009; i >= 2000; i--) {
+                  div
+                    input.radio(name="year" type="radio" id=`${i}` value=`${i}`)
+                    label.option(for=`${i}`) #{i}
+                - }
+                  div
+                    input.radio(name="year" type="radio" id='year-2000s' value="2000s")
+                    label.option(for="year-2000s") 2000s
+                - for(let i = 1999; i >= 1990; i--) {
+                  div
+                    input.radio(name="year" type="radio" id=`${i}` value=`${i}`)
+                    label.option(for=`${i}`) #{i}
+                - }
+                  div
+                    input.radio(name="year" type="radio" id='year-1990s' value="1990s")
+                    label.option(for="year-1990s") 1990s
+                - for(let i = 1989; i >= 1980; i--) {
+                  div
+                    input.radio(name="year" type="radio" id=`${i}` value=`${i}`)
+                    label.option(for=`${i}`) #{i}
+                - }
+                  div
+                    input.radio(name="year" type="radio" id='year-1980s' value="1980s")
+                    label.option(for="year-1980s") 1980s
+                - for(let i = 1979; i >= 1970; i--) {
+                  div
+                    input.radio(name="year" type="radio" id=`${i}` value=`${i}`)
+                    label.option(for=`${i}`) #{i}
+                - }
+                  div
+                    input.radio(name="year" type="radio" id='year-1970s' value="1970s")
+                    label.option(for="year-1970s") 1970s
+                - for(let i = 1969; i >= 1960; i--) {
+                  div
+                    input.radio(name="year" type="radio" id=`${i}` value=`${i}`)
+                    label.option(for=`${i}`) #{i}
+                - }
+                  div
+                    input.radio(name="year" type="radio" id='year-1960s' value="1960s")
+                    label.option(for="year-1960s") 1960s
+                    
+              .selected-year(value="") Select Year
+              
           b.col-xxl-2.p-3.text-secondary
-            label.m-0(for='gerne') Genre:
-            select.form-select(name='gerne')
-              - const genres = ["Action", "Crime", "Thriller", "Drama", "Comedy", "Biography", "Family", "History", "Music", "Romance", "Western", "Adventure", "Costome", "Horror", "Sci-Fi", "War", "Sport", "Animation", "Fantasy", "Documentary", "Mystery", "Kungfu"]
-              option(value='') Select Genre
-              each genre in genres
-                option(value= `${genre}`)= genre
+            - const genres = ["Action", "Crime", "Thriller", "Drama", "Comedy", "Biography", "Family", "History", "Music", "Romance", "Western", "Adventure", "Costome", "Horror", "Sci-Fi", "War", "Sport", "Animation", "Fantasy", "Documentary", "Mystery", "Kungfu"]
+            .select-box
+              label.m-0(for='gerne') Genre:
+              .options-container-genre
+                each genre in genres
+                  div
+                    input.radio(name="gerne" type="radio" id=`${genre}` value=`${genre}`)
+                    label.option(for=`${genre}`) #{genre}
+              .selected-genre(value="") Select Genre
+            
           b.col-xxl-2.p-3.text-secondary
-            label.m-0(for='country') Country:
-            select.form-select(name='country')
-              option(value='') Select Country
-              option(value='United States') United States
-              option(value='France') France
-              option(value='Italy') Italy
+            - const countries = ['United States', 'France', 'Italy']
+            .select-box
+              label.m-0(for='country') Country:
+              .options-container-country
+                each country in countries
+                  div
+                    input.radio(name="country" type="radio" id=`${country}` value=`${country}`)
+                    label.option(for=`${country}`) #{country}
+              .selected-country(value="") Select Country
+
           b.col-xxl-2.p-3.text-secondary
-            label.m-0(for='sort') Sort By:
-            select.form-select(name='sort')
-              option(value='') Default
-              option(value='create_at') Recently Added
-              option(value='release') Release Date
-              option(value='title') Name
-              option(value='rating') IMDb
-          b.col-xxl-2.p-2.d-flex.align-items-end
+            .select-box
+              label.m-0(for='sort') Sort By:
+              .options-container-sort
+                div
+                  input.radio(name="sort" type="radio" id='create_at' value='create_at')
+                  label.option(for='create_at') Recently Added
+                div
+                  input.radio(name="sort" type="radio" id='release' value='release')
+                  label.option(for='release') Release Date
+                div
+                  input.radio(name="sort" type="radio" id='title' value='title')
+                  label.option(for='title') Name
+                div
+                  input.radio(name="sort" type="radio" id='rating' value='rating')
+                  label.option(for='rating') IMDb
+              .selected-sort(value="") Default
+
+          .col-xxl-2.p-3.d-flex.align-items-end
             button.btn.btn-warning.m-2.text-light.text-nowrap(type='submit')
               i.fa-solid.fa-filter.me-2
               |Filter
@@ -130,5 +179,6 @@ html(lang="en")
 
     include ../../partials/footer.pug
 
+    script(src="/js/movies.js")
     script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js")
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js")
