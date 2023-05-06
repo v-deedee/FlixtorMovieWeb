@@ -3,7 +3,7 @@ const User = models.user;
 const Movie = models.movie;
 const WatchList = models.watch_list;
 const Director = models.director;
-const Producer = models.producer;
+const Producer = models.producer
 const Sequelize = models.sequelize;
 
 module.exports.home = async (req, res) => {
