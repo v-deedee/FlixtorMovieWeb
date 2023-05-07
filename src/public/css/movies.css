@@ -6,6 +6,7 @@ main {
     display: flex;
     width: 180px;
     flex-direction: column;
+    position: relative;
 }
 
 .select-box
@@ -22,6 +23,8 @@ main {
     border-radius: 8px;
     overflow: hidden;
     order: 1;
+    position: absolute;
+    top: 70px
 }
 
 .selected-year,

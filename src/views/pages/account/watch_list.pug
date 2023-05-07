@@ -11,34 +11,54 @@ html
         header 
             include ../../partials/header.pug
         main
-            .mt-5.mx-5.row.justify-content-center
-                .col-8
-                    .row 
-                        h2 Watch List
-                    .row
-                        each movie in movieInWatchList
-                            .col-3 
-                                .title #{movie.title} 
-                                .description #{movie.description} 
-                                .rating #{movie.rating}
-                                .duration #{movie.duration}
-                                img(src='/images/' + movie.image)
-                                .release #{movie.release} 
-                                .director #{movie['director.full_name']}
-                                .producer #{movie['producer.name']}
-                                .country #{movie['producer.country']}                            
-                    
-                .col-4
-                    ul.side-bar.list-unstyled.float-end.w-50
-                        li.mt-3.mb-2
-                            a.btn.btn-primary.w-100.text-start(href='/account/profile', role='button')
-                                i.bi.bi-person-lines-fill  Profile
-                        li.mb-2
-                            a.btn.btn-primary.w-100.text-start(href='/account/watch_list', role='button')
-                                i.bi.bi-heart  Watch List
-                        li.mb-2
-                            a.btn.btn-primary.w-100.text-start(href='/account/signout', role='button')
-                                i.bi.bi-box-arrow-right  Sign Out
+            .container
+                .mt-5.mx-2.row.justify-content-center
+                    .col-8
+                        //- title
+                        .title-box.mb-5
+                            h2.mb-3.text-success-emphasis.border-bottom.border-success.border-2(data-bs-theme="dark") Watch List
+                        .row.row-cols-auto
+                            each movie in movieInWatchList
+                                .col-xxl-3.mb-5
+                                    .movie-iteme
+                                        i.fa-solid.fa-circle-play(style='color: #0db0d9;')
+                                        .Hover
+                                            .bg-body-tertiary(style="width:190px")
+                                                h5.text-nowrap= movie.title
+                                                .d-flex.flex-row.justify-content-between
+                                                    .d-flex.flex-row
+                                                        p.my-0.mx-1= movie.release.substr(0, 4)
+                                                        p.my-0.mx-1 |
+                                                        p.my-0.mx-1.rating
+                                                            span.rating-value= movie.rating
+                                                            span.fa.fa-star.text-warning
+                                                            p.my-0.mx-1 |
+                                                            p1.my-0.mx-1= movie.duration
+                                            span.rating-value= movie.description 
+                                        a.text-decoration-none.text-dark(href=`/movie/${movie.id}`)
+                                            img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
+                                            .bg-body-tertiary(style="width:200px")
+                                                h5= movie.title
+                                                .d-flex.flex-row.justify-content-between
+                                                    .d-flex.flex-row
+                                                        p.my-0.mx-1= movie.release.substr(0, 4)
+                                                        p.my-0.mx-1 |
+                                                        p.my-0.mx-1.rating
+                                                        span.rating-value= movie.rating
+                                                        span.fa.fa-star.text-warning
+                                                    .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie                     
+                        
+                    .col-4
+                        ul.side-bar.list-unstyled.float-end.w-50
+                            li.mt-3.mb-2
+                                a.btn.btn-primary.w-100.text-start(href='/account/profile', role='button')
+                                    i.bi.bi-person-lines-fill  Profile
+                            li.mb-2
+                                a.btn.btn-primary.w-100.text-start(href='/account/watch_list', role='button')
+                                    i.bi.bi-heart  Watch List
+                            li.mb-2
+                                a.btn.btn-primary.w-100.text-start(href='/account/signout', role='button')
+                                    i.bi.bi-box-arrow-right  Sign Out
         footer 
             include ../../partials/footer.pug   
     
