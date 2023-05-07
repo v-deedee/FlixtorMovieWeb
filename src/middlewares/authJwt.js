@@ -57,6 +57,7 @@ isUser = async (req, res, next) => {
   }
 };
 
+
 const authJwt = {
     isAdmin,
     isUser,
