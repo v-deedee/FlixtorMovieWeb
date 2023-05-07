@@ -21,34 +21,15 @@ html(lang="en")
             input.form-control.p-3(type="text", name="keyword", placeholder="Enter movie title")
             button.btn.btn-info.text-light(type="submit")
               i.fa-solid.fa-arrow-right.fa-xl.p-2
-      if results && results.length > 0
-        .container.mt-3
-          h2.mb-3(style="color: var(--bs-success-text-emphasis)" data-bs-theme="dark")
-            u Search results
-          .row.row-cols-auto
-            each movie in results
-              .col-xxl-2.mb-5
-                .movie-iteme
-                  a.text-decoration-none.text-dark(href=`/movie/${movie.id}`)
-                    img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
-                    .bg-body-tertiary(style="width:200px")
-                      h5.text-nowrap= movie.title
-                      .d-flex.flex-row.justify-content-between
-                        .d-flex.flex-row
-                          p.my-0.mx-1= movie.release.substr(0, 4)
-                          p.my-0.mx-1 |
-                          p.my-0.mx-1.rating
-                            span.rating-value= movie.rating
-                            span.fa.fa-star.text-warning
-                        .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie
-      else
-        p 
+      
+      //- movie section
       .container.mt-3
-        h2.mb-3.text-success-emphasis(data-bs-theme="dark")
-          u= `${genre.charAt(0).toUpperCase() + genre.slice(1)} Movies`
+        //- title
+        .title-box.mb-4
+          h2.mb-3.text-success-emphasis.border-bottom.border-success.border-2(data-bs-theme="dark")= `${genre.charAt(0).toUpperCase() + genre.slice(1)} Movies`
 
-        //- filter section  
-        form.row.row-cols-auto.mx-0.mb-3.bg-primary-subtle.rounded(action="/movie/filter" method="GET")
+        //- filter section
+        form.row.row-cols-auto.mx-0.mb-3.border.rounded(action="/movie/filter" method="GET")
           b.col-xxl-2.p-3.text-secondary
             .select-box
               label.m-0(for="year") Year:
@@ -152,17 +133,32 @@ html(lang="en")
                   label.option(for='rating') IMDb
               .selected-sort(value="") Default
 
-          .col-xxl-2.p-3.d-flex.align-items-end
-            button.btn.btn-warning.m-2.text-light.text-nowrap(type='submit')
+          .col-xxl-2.p-3.d-flex.align-items-start
+            button.btn.btn-warning.m-2.mt-4.text-light.text-nowrap(type='submit')
               i.fa-solid.fa-filter.me-2
               |Filter
-        //- movies section
+
+        //- show top section
         if movies && movies.length > 0
           .container.p-0
             .row.row-cols-auto
               each movie in movies
                 .col-xxl-2.mb-5
                   .movie-iteme
+                    i.fa-solid.fa-circle-play(style='color: #0db0d9;')
+                    .Hover
+                      .bg-body-tertiary(style="width:190px")
+                        h5.text-nowrap= movie.title
+                        .d-flex.flex-row.justify-content-between
+                          .d-flex.flex-row
+                            p.my-0.mx-1= movie.release.substr(0, 4)
+                            p.my-0.mx-1 |
+                            p.my-0.mx-1.rating
+                              span.rating-value= movie.rating
+                              span.fa.fa-star.text-warning
+                              p.my-0.mx-1 |
+                              p1.my-0.mx-1= movie.duration
+                      span.rating-value= movie.description 
                     a.text-decoration-none.text-dark(href=`/movie/${movie.id}`)
                       img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
                       .bg-body-tertiary(style="width:200px")
