@@ -1,0 +1,101 @@
+main {
+    min-height: 1000px;
+}
+
+#videoContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#videoPlayer {
+    width: 100%;
+    height: auto;
+}
+
+.toggle-btn {
+    font-size: 0.9rem;
+    padding: 3px 6px;
+    border-radius: 0;
+    height: 30px;
+}
+
+.movie-container {
+    display: flex;
+    align-items: start;
+}
+
+.movie-poster {
+    margin-right: 20px;
+}
+
+.meta {
+    width: 120px;
+    font-weight: 500;
+}
+
+.title-box {
+    width: fit-content;
+    block-size: fit-content;
+}
+
+.card-title{
+    font-size: 16px;
+    margin-bottom: 0;
+}
+
+.text-muted{
+    font-size: 10px;
+}
+
+.Hover {
+    position: absolute;
+    max-width: 200px;
+    background: #fff;
+    color: #010708c0;
+    padding: .5rem;
+    width: max-content;
+    border-radius: 5px;
+    transform: scale(0);
+    transition: 0.25s ease-in-out;
+    justify-content: space-between;
+    opacity: 0.9;
+    height: 290px;
+}
+
+.movie-iteme:hover .Hover {
+    display: block;
+    transform: scale(1);
+}
+
+.des {
+    height: 210px;
+    overflow-y: scroll;
+    /* text-overflow: ellipsis; */
+}
+
+.des::-webkit-scrollbar {
+    width: 4px;
+}
+
+.des::-webkit-scrollbar-thumb {
+    background: #525861;
+    border-radius: 8px;
+}
+
+.movie-box {
+    width: fit-content;
+}
+
+.movie-title {
+    white-space: nowrap; 
+    width: 190px; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+img {
+    vertical-align: middle;
+    border-radius: 5px;
+}

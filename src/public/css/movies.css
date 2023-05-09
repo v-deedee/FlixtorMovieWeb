@@ -11,7 +11,22 @@ main {
 
 .select-box
 .options-container-year,
-.options-container-genre,
+.options-container-genre {
+    background: #2f3640;
+    color: #f5f6fa;
+    max-height: 0;
+    width: 100%;
+    opacity: 0;
+    transition: all 0.4s;
+    border-radius: 8px;
+    overflow: hidden;
+    order: 1;
+    position: absolute;
+    top: 70px;
+    z-index: 2;
+}
+
+.select-box
 .options-container-country,
 .options-container-sort {
     background: #2f3640;
@@ -24,7 +39,8 @@ main {
     overflow: hidden;
     order: 1;
     position: absolute;
-    top: 70px
+    top: 70px;
+    z-index: 1;
 }
 
 .selected-year,
@@ -82,7 +98,6 @@ main {
 .options-container-country::-webkit-scrollbar,
 .options-container-sort::-webkit-scrollbar {
     width: 8px;
-    background: #0d141f;
     border-radius: 0 8px 8px 0;
 }
 
@@ -91,8 +106,8 @@ main {
 .options-container-genre::-webkit-scrollbar-thumb,
 .options-container-country::-webkit-scrollbar-thumb,
 .options-container-sort::-webkit-scrollbar-thumb {
-    background: #525861;
-    border-radius: 0 8px 8px 0;
+    background: #7c8188;
+    border-radius: 8px;
 }
 
 .select-box
