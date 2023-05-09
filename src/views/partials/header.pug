@@ -6,7 +6,7 @@
 
 - const genres_col1 = ["Action", "Crime", "Thriller", "Drama", "Comedy", "Biography", "Family", "History", "Music", "Romance", "Western"]
 - const genres_col2 = ["Adventure", "Costome", "Horror", "Sci-Fi", "War", "Sport", "Animation", "Fantasy", "Documentary", "Mystery", "Kungfu"]
-header.navbar.bg-body-tertiary.navbar-expand-sm(data-bs-theme="dark")
+header.navbar.bg-body-tertiary.navbar-expand-md(data-bs-theme="dark")
     .container
         a.navbar-brand.p-0(href=verified ? "/home" : "/" style="color: var(--bs-teal); font-size: 1.5rem")
             i.fa-solid.fa-film
@@ -18,19 +18,19 @@ header.navbar.bg-body-tertiary.navbar-expand-sm(data-bs-theme="dark")
                 li.nav-item.px-sm-4
                     a.nav-link(href=verified ? "/home" : "/") HOME
                 li.nav-item.dropdown.px-sm-4
-                    a.nav-link(href="#" role="button" data-bs-toggle="dropdown") GENRE
+                    a.nav-link.dropdown-toggle(href="#" role="button" data-bs-toggle="dropdown") GENRE
                     .dropdown-menu(style="width: 300px")
-                        .row.row-cols-2
-                            .col.px-4
+                        .row.row-cols-2.m-0
+                            .col
                                 each genre in genres_col1
-                                    a.dropdown-item.px-2.mx-2(href=`/movie/genre/${genre.toLowerCase()}`)= genre
-                            .col.px-4
+                                    a.dropdown-item(href=`/movie/genre/${genre.toLowerCase()}`)= genre
+                            .col
                                 each genre in genres_col2
-                                    a.dropdown-item.px-2.mx-2(href=`/movie/genre/${genre.toLowerCase()}`)= genre
+                                    a.dropdown-item(href=`/movie/genre/${genre.toLowerCase()}`)= genre
                 li.nav-item.px-sm-4
                     a.nav-link(href="/movie/movies") MOVIES
                 li.nav-item.px-sm-4
-                    a.nav-link(href="/movie/topIMDb") TOP IMDB
+                    a.nav-link.text-nowrap(href="/movie/topIMDb") TOP IMDB
         if verified
             .dropdown
                 button#dropdownMenuButton1.btn.btn-outline-light.dropdown-toggle(type='button', data-bs-toggle='dropdown', aria-expanded='false')
@@ -53,6 +53,4 @@ header.navbar.bg-body-tertiary.navbar-expand-sm(data-bs-theme="dark")
 
         else
             a.btn.btn-outline-light(href="/account/signin" role="button")
-                |Sign In/ Sign Up
-
-
+                |Sign In
