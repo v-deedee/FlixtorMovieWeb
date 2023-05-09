@@ -8,14 +8,16 @@ const manageMovieController = require("../controllers/management/manage.movie.co
 const manageCommentController = require("../controllers/management/manage.comment.controller");
 
 router.get("/users", [verifyToken, isAdmin], manageUserController.showUsers);
-// router.get("/movies", [verifyToken, isAdmin], manageMovieController.showMovies);
-// router.get(
-//   "/comments",
-//   [verifyToken, isAdmin],
-//   manageCommentController.showComments
-// );
+router.get("/movies", [verifyToken, isAdmin], manageMovieController.showMovies);
+router.get(
+  "/comments",
+  [verifyToken, isAdmin],
+  manageCommentController.showComments
+);
 router.post("/users", manageUserController.postManageUsers);
 // router.post("/movies", manageMovieController.postManageMovies);
-// router.post("/comments", manageCommentController.postManageComments);
+// router.post("/movies/add", manageMovieController.postManageMovies);
+// router.post("/movies/update", manageMovieController.postManageMovies);
+router.post("/comments", manageCommentController.postManageComments);
 
 module.exports = router;
