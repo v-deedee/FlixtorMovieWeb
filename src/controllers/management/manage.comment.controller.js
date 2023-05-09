@@ -1,10 +1,11 @@
+const { Op } = require("sequelize");
 const models = require("../../models/index");
 const User = models.user;
 const Movie = models.movie;
 const Comment = models.comment;
 const Sequelize = models.sequelize;
 
-module.exports.showUsers = async (req, res) => {
+module.exports.showComments = async (req, res) => {
   const commentList = await Comment.findAll({
     attributes: ["id", "content", "violate", "create_at", "update_at"],
     include: [
@@ -28,4 +29,23 @@ module.exports.showUsers = async (req, res) => {
     title: "Manage Comments",
     commentList,
   });
+};
+
+module.exports.postManageComments = async (req, res) => {
+  try {
+    if (typeof req.body.deleteIds !== "undefined") {
+      const deleteIds = req.body.deleteIds;
+      await Comment.destroy({
+        where: {
+          id: {
+            [Op.in]: deleteIds,
+          },
+        },
+      });
+    }
+
+    res.status(200).json({ message: "Success." });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
 };
