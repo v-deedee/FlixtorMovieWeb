@@ -13,5 +13,6 @@ router.get('/filter', movieController.filterMovies);
 router.get('/search', movieController.search);
 router.get('/:id', watchController.showMovie);
 router.post('/:id/comment', verifyToken, watchController.writeComment);
+router.post('/:id/watchlist', verifyToken, watchController.addToWatchList);
 
 module.exports = router;

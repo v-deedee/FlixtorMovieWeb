@@ -5,15 +5,41 @@ const Category = models.category;
 const Producer = models.producer;
 const User = models.user;
 const { Op } = require('sequelize');
+const jwt = require('jsonwebtoken');
+const authConfig = require('../../config/auth');
 
 module.exports.getAlltopIMDb = async (req, res) => {
   try {
-    const topIMDb = await Movie.findAll({
-      order: [['rating', 'DESC']]
-    });
-  
-    res.render('movie/topIMDb', { title: 'Top IMDb', topIMDb});
+    if (!req.session.token) {
+      const topIMDb = await Movie.findAll({
+        order: [['rating', 'DESC']]
+    	});
+    	return res.render('movie/topIMDb', { title: 'Top IMDb', topIMDb});
+    }
+    jwt.verify(req.session.token, authConfig.secret, async (err, decoded) => {
+      if (err) {
+        console.log(err);
+        return res.status(401).json({
+          message: "Unauthorized!",
+        });
+      }
 
+      const user = await User.findByPk(decoded.id, {
+        attributes: ["id", "user_name"],
+      });
+
+      if (!user) {
+        return res.status(403).json({
+          message: "Invalid user!",
+        });
+      }
+
+      const topIMDb = await Movie.findAll({
+        order: [['rating', 'DESC']]
+    	});
+
+      res.render('movie/topIMDb', { title: 'Top IMDb', topIMDb, user, verified: true});
+    });
   } catch (err) {
     console.log(err);
     res.status(500).send('Server Error');
