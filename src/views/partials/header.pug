@@ -8,7 +8,7 @@
 - const genres_col2 = ["Adventure", "Costome", "Horror", "Sci-Fi", "War", "Sport", "Animation", "Fantasy", "Documentary", "Mystery", "Kungfu"]
 header.navbar.bg-body-tertiary.navbar-expand-md(data-bs-theme="dark")
     .container
-        a.navbar-brand.p-0(href="/" style="color: var(--bs-teal); font-size: 1.5rem")
+        a.navbar-brand.p-0(href=verified ? "/home" : "/" style="color: var(--bs-teal); font-size: 1.5rem")
             i.fa-solid.fa-film
             |Flixtor
         .navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#headerNav")
@@ -16,7 +16,7 @@ header.navbar.bg-body-tertiary.navbar-expand-md(data-bs-theme="dark")
         .collapse.navbar-collapse#headerNav.justify-content-center
             ul.navbar-nav
                 li.nav-item.px-sm-4
-                    a.nav-link(href="/") HOME
+                    a.nav-link(href=verified ? "/home" : "/") HOME
                 li.nav-item.dropdown.px-sm-4
                     a.nav-link.dropdown-toggle(href="#" role="button" data-bs-toggle="dropdown") GENRE
                     .dropdown-menu(style="width: 300px")

@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const models = require("../../models/index");
 const User = models.user;
 const Sequelize = models.sequelize;
@@ -16,16 +17,30 @@ module.exports.showUsers = async (req, res) => {
 };
 
 module.exports.postManageUsers = async (req, res) => {
-  const deleteIds = req.body.deleteIds;
-  const makeAdminIds = req.body.makeAdminIds;
-
   try {
-    if (!deleteIds) {
-      // gọi trigger xóa
+    if (typeof req.body.deleteIds !== "undefined") {
+      const deleteIds = req.body.deleteIds;
+      await User.destroy({
+        where: {
+          id: {
+            [Op.in]: deleteIds,
+          },
+        },
+      });
     }
 
-    if (!makeAdminIds) {
-      //gọi trigger cấp admin
+    if (typeof req.body.makeAdminIds !== "undefined") {
+      const makeAdminIds = req.body.makeAdminIds;
+      await User.update(
+        { role: "admin" },
+        {
+          where: {
+            id: {
+              [Op.in]: makeAdminIds,
+            },
+          },
+        }
+      );
     }
 
     res.status(200).json({ message: "Success." });

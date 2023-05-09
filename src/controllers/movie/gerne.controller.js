@@ -5,30 +5,75 @@ const Category = models.category;
 const Producer = models.producer;
 const User = models.user;
 const { Op } = require('sequelize');
+const jwt = require('jsonwebtoken');
+const authConfig = require('../../config/auth');
 
 module.exports.getAllMoviesByGenre = async (req, res) => {
   try {
-    const genres = [
-      "Action", "Crime", "Thriller", "Drama", "Comedy", "Biography", "Family",
-      "History", "Music", "Romance", "Western", "Adventure", "Costome", "Horror",
-      "Sci-Fi", "War", "Sport", "Animation", "Fantasy", "Documentary", "Mystery",
-      "Kungfu"
-    ];
-    const genre = req.params.genre;
+    if (!req.session.token) {
+      const genres = [
+        "Action", "Crime", "Thriller", "Drama", "Comedy", "Biography", "Family",
+        "History", "Music", "Romance", "Western", "Adventure", "Costome", "Horror",
+        "Sci-Fi", "War", "Sport", "Animation", "Fantasy", "Documentary", "Mystery",
+        "Kungfu"
+      ];
+      const genre = req.params.genre;
 
-    if (!genres.map(g => g.toLowerCase()).includes(genre)) {
-      return res.send([]);
+      if (!genres.map(g => g.toLowerCase()).includes(genre)) {
+        return res.send([]);
+      }
+
+      const genreMovies = await Movie.findAll({
+        include: [
+          {
+            model: Gerne,
+            where: { name: genre }
+          }
+        ]
+      });
+      return res.render('movie/gerne', { title: `${genre.charAt(0).toUpperCase() + genre.slice(1)} Movies`, movies: genreMovies, genre });
     }
+    jwt.verify(req.session.token, authConfig.secret, async (err, decoded) => {
+      if (err) {
+        console.log(err);
+        return res.status(401).json({
+          message: "Unauthorized!",
+        });
+      }
 
-    const genreMovies = await Movie.findAll({
-      include: [
-        {
-          model: Gerne,
-          where: { name: genre }
-        }
-      ]
+      const user = await User.findByPk(decoded.id, {
+        attributes: ["id", "user_name"],
+      });
+
+      if (!user) {
+        return res.status(403).json({
+          message: "Invalid user!",
+        });
+      }
+
+      const genres = [
+        "Action", "Crime", "Thriller", "Drama", "Comedy", "Biography", "Family",
+        "History", "Music", "Romance", "Western", "Adventure", "Costome", "Horror",
+        "Sci-Fi", "War", "Sport", "Animation", "Fantasy", "Documentary", "Mystery",
+        "Kungfu"
+      ];
+      const genre = req.params.genre;
+
+      if (!genres.map(g => g.toLowerCase()).includes(genre)) {
+        return res.send([]);
+      }
+
+      const genreMovies = await Movie.findAll({
+        include: [
+          {
+            model: Gerne,
+            where: { name: genre }
+          }
+        ]
+      });
+      res.render('movie/gerne', { title: `${genre.charAt(0).toUpperCase() + genre.slice(1)} Movies`, movies: genreMovies, genre,user, verified: true });
     });
-    res.render('movie/gerne', { title: `${genre.charAt(0).toUpperCase() + genre.slice(1)} Movies`, movies: genreMovies, genre });
+
   } catch (err) {
     console.log(err);
     res.status(500).send('Server Error');
@@ -119,3 +164,4 @@ module.exports.search = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
+
