@@ -1,0 +1,193 @@
+doctype html
+html(lang="en")
+  head
+    title= title
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css")
+    link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous")
+    link(rel="stylesheet" type="text/css" href="/css/home.css")
+    link(rel="stylesheet" type="text/css" href="/css/watch.css")
+    script(src="https://kit.fontawesome.com/1de5e0d4fc.js" crossorigin="anonymous")
+
+  body
+    include ../../partials/header.pug
+
+    main
+      //- search field
+      form(action="/movie/search" method="get")
+        div.form-group.text-bg-dark(style="padding:1em 20vw")
+          .input-group
+            span.input-group-text.p-3
+              i.fa-solid.fa-magnifying-glass.fa-lg
+            input.form-control.p-3(type="text", name="keyword", placeholder="Enter movie title")
+            button.btn.btn-info.text-light(type="submit")
+              i.fa-solid.fa-arrow-right.fa-xl.p-2
+
+      .container.py-2
+          |Home / Movies / #{movie.title}
+
+      .container
+        #videoContainer
+          //- Hiển thị video phim
+          video#videoPlayer(controls)
+            source(src=`/videos/${movie.video}`, type="video/mp4")
+
+      .container.py-4.d-flex.justify-content-center
+        form#add-form.mx-2(action=`/movie/${movie.id}/watchlist`, method='post')
+          input(type='hidden' name='_csrf' value=csrfToken)
+          button.btn.btn-light.ml-2.toggle-btn(type='submit')
+            i.bi.bi-heart
+            |   Add to list
+        a.btn.btn-light.ml-2.toggle-btn.mx-2(href="#comment")
+          i.bi.bi-chat-fill
+          |   Comment
+        a.btn.btn-light.ml-2.toggle-btn.mx-2(href="#")
+          i.bi.bi-exclamation-circle-fill
+          |   Report issues
+      
+      .container
+        .row
+          .col-xxl-8
+            .movie-container.shadow.bg-body-secondary.rounded.p-3.pb-5
+              .movie-poster.pt-3
+                img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
+              .movie-info
+                h1= movie.title
+                .d-flex.flex-row
+                  .me-3.ms-2.fs-4(style="margin-top: -5.5px")
+                    i.bi.bi-badge-hd
+                  .mx-3
+                    span= movie.rating
+                    span.fa.fa-star.text-warning
+                  .mx-3
+                    span= movie.duration
+                p #{movie.description}
+                .row
+                  .col-4.meta Producer:
+                  .col-8 #{movie.producer.name}
+                .row
+                  .col-4.meta Country:
+                  .col-8 #{movie.producer.country}
+                .row
+                  .col-4.meta Director:
+                  .col-8 #{movie.director.full_name}
+                .row
+                  .col-4.meta Cast:
+                  .col-8 #{movie.actors.map((actor) => actor.full_name).join(", ")}
+                .row
+                  .col-4.meta Genre:
+                  .col-8 #{movie.gernes.map((genre) => genre.name).join(", ")}
+                .row
+                  .col-4.meta Release date:
+                  .col-8 #{movie.release}
+
+            //- Hiển thị comment
+            #comment
+            .title-box.mt-5
+              h2.mb-3.text-success-emphasis.border-bottom.border-success.border-2(data-bs-theme="dark") Comment
+            //- Form viết comment
+            form#comment-form(action=`/movie/${movie.id}/comment` method="POST")
+              input#movie-id(type="hidden" value=`${movie.id}`)
+              label(for="content" class="form-label")
+              div.d-flex
+                input#comment-input.form-control.p-3(name="content" placeholder="Join the discussion..." required)
+                button.btn.btn-info.text-light.mx-2(type="submit")
+                  i.bi.bi-send-fill.p-2
+            //- comment list
+            #comment-list.mb-5
+              each comment in comments
+                .card.mt-3
+                  .card-body.d-flex.flex-row
+                    .avt.me-3
+                      img(src="/images/user.png" width="50" height="50")
+                    .cmt-detail
+                      h5.card-title.text-success= comment.user.user_name
+                      span.text-muted= comment.create_at
+                      p.mt-1.card-text= comment.content
+            .d-grid.gap-2.mb-5
+              button.btn.btn-info.text-light-emphasis(type="button")
+                |Load more comments
+
+                    
+          //- Gợi ý phim cùng thể loại
+          .col-xxl-4
+            if relatedMovies && relatedMovies.length > 0
+              .title-box.mb-4
+                h2.mb-3.text-success-emphasis.border-bottom.border-success.border-2(data-bs-theme="dark") Similar Movies
+              .container.p-0
+                .row.row-cols-auto
+                  each movie in relatedMovies
+                    .col-xxl-4(style="height:300px")
+                      .movie-iteme.m-0(style="transform:scale(0.7);transform-origin:0 0;")
+                        i.fa-solid.fa-circle-play(style='color: #0db0d9;')
+                        .Hover
+                          .bg-body-tertiary(style="width:200px")
+                            h5.text-nowrap= movie.title
+                            .d-flex.flex-row.justify-content-between
+                              .d-flex.flex-row
+                                p.my-0.mx-1= movie.release.substr(0, 4)
+                                p.my-0.mx-1 |
+                                p.my-0.mx-1.rating
+                                  span.rating-value= movie.rating
+                                  span.fa.fa-star.text-warning
+                                  p.my-0.mx-1 |
+                                  p.my-0.mx-1= movie.duration
+                          span.rating-value= movie.description
+                        a.text-decoration-none.text-dark(href=`/movie/${movie.id}`)
+                          img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
+                          .bg-body-tertiary(style="width:200px")
+                            h5.text-nowrap= movie.title
+                            .d-flex.flex-row.justify-content-between
+                              .d-flex.flex-row
+                                p.my-0.mx-1= movie.release.substr(0, 4)
+                                p.my-0.mx-1 |
+                                p.my-0.mx-1.rating
+                                  span.rating-value= movie.rating
+                                  span.fa.fa-star.text-warning
+                              .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie
+
+    include ../../partials/footer.pug
+
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js")
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js")
+    script.
+      $(document).ready(function() {
+        $('#comment-form').submit(function(event) {
+          event.preventDefault();
+
+          var movieId = $('#movie-id').val();
+          var content = $('#comment-input').val();
+          $.ajax({
+            url: `/movie/${movieId}/comment`,
+            type: 'POST',
+            data: {content: content},
+            success: function(response) {
+              $('#comment-form').trigger('reset');
+              alert(response.message);
+              $('#comment-list').prepend(`<div>${response.comment.content}</div>`);
+            },
+            error: function(error) {
+              alert(error.responseJSON.message);
+              console.log(error);
+            }
+          });
+        });
+      });
+    script.
+      $(document).ready(function() {
+        $('#add-form').submit(function(event) {
+          event.preventDefault();
+          var movieId = $('#movie-id').val();
+          $.ajax({
+            url: `/movie/${movieId}/watchlist`,
+            type: 'POST',
+            success: function(response) {
+              alert(response.message);
+            },
+            error: function(error) {
+              alert(error.responseJSON.message);
+            }
+          });
+        });
+      });

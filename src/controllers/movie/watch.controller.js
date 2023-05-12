@@ -148,7 +148,8 @@ module.exports.showMovie = async (req, res) => {
               model: User,
               attributes: ['user_name'],
             }
-          ]
+          ],
+          order: [['create_at', 'DESC']]
         });
         res.render('movie/watch', { movie, comments, relatedMovies, user, verified: true });
       });
@@ -184,99 +185,126 @@ module.exports.showComments = async (req, res) => {
 // Module viết comment
 module.exports.writeComment = async (req, res) => {
   try {
-    const movieId = req.params.id;
-    const userId = req.userId;
-    
-    const movie = await Movie.findByPk(movieId);
-    if (!movie) {
-      return res.status(404).send('Movie not found');
+    if (!req.session.token) {
+      return res.status(401).json({
+        message: "Please sign in before commenting!",
+      });
     }
+    jwt.verify(req.session.token, authConfig.secret, async (err, decoded) => {
+      if (err) {
+        console.log(err);
+        return res.status(401).json({
+          message: "Unauthorized!",
+        });
+      }
 
-    await Comment.create({
-      content: req.body.content,
-      violate: 0,
-      user_id: userId,
-      movie_id: movieId,
-      create_at: new Date(),
+      const movieId = req.params.id;
+      const userId = decoded.id;
+      
+      const movie = await Movie.findByPk(movieId);
+      if (!movie) {
+        return res.status(404).json({
+          message: "Movie not found",
+        });
+      }
+
+      await Comment.create({
+        content: req.body.content,
+        violate: 0,
+        user_id: userId,
+        movie_id: movieId,
+        create_at: new Date(),
+      });
+
+      return res.status(200).json({
+        message: "Comment added successfully!",
+      });
     });
-
-    res.redirect(`/movie/${movieId}`);
   } catch (err) {
     console.log(err);
-    if (err.name === 'SequelizeValidationError') {
-      res.status(400).send(err.errors[0].message);
-    } else if (err.name === 'UnauthorizedError') {
-      res.status(401).send(err.message);
-    } else {
-      res.status(500).send('Server Error');
-    }
+    res.status(500).json({
+      message: "Server Error",
+    });
   }
 };
 
 module.exports.addToWatchList = async (req, res) => {
   try {
-
-    // Lấy thông tin user từ database
-    const user = await User.findByPk(req.userId);
-
-    if (!user) {
-      return res.status(404).json({
-        message: "User not found",
+    if (!req.session.token) {
+      return res.status(401).json({
+        message: "Please sign in before adding movie to watchlist!",
       });
     }
+    jwt.verify(req.session.token, authConfig.secret, async (err, decoded) => {
+      if (err) {
+        console.log(err);
+        return res.status(401).json({
+          message: "Unauthorized!",
+        });
+      }
 
-    // Lấy thông tin phim từ database
-    const movieId = req.params.id;
-    const movie = await Movie.findByPk(movieId);
+      const user = await User.findByPk(decoded.id);
 
-    if (!movie) {
-      return res.status(404).json({
-        message: "Movie not found",
-      });
-    }
+      if (!user) {
+        return res.status(404).json({
+          message: "User not found",
+        });
+      }
 
-    const watchList_check = await WatchList.findOne({
-      where: {
-        user_id: req.userId,
-      },
-      include: {
-        model: Movie,
+      // Lấy thông tin phim từ database
+      const movieId = req.params.id;
+      const movie = await Movie.findByPk(movieId);
+
+      if (!movie) {
+        return res.status(404).json({
+          message: "Movie not found",
+        });
+      }
+
+      const watchList_check = await WatchList.findOne({
         where: {
-          id: movieId,
+          user_id: decoded.id,
         },
-      },
-    });
-    
-    if (watchList_check) {
-      return res.status(400).json({
-        message: "Movie already added to watchlist",
+        include: {
+          model: Movie,
+          where: {
+            id: movieId,
+          },
+        },
       });
-    }
-    
-    // Tìm danh sách xem của người dùng
-    const watchList = await WatchList.findOne({
-      where: {
-        user_id: req.userId,
-      },
-    });
-    
-    if (!watchList) {
-      return res.status(404).json({
-        message: "Watchlist not found",
-      });
-    }
-    
-    // Thêm phim vào danh sách xem
-    await watchList.addMovie(movieId);
-    
 
-    res.redirect(`/account/watch_list`);
+      if (watchList_check) {
+        return res.status(400).json({
+          message: "This movie already added to your watchlist!",
+        });
+      }
+
+      // Tìm danh sách xem của người dùng
+      const watchList = await WatchList.findOne({
+        where: {
+          user_id: decoded.id,
+        },
+      });
+
+      if (!watchList) {
+        return res.status(404).json({
+          message: "Watchlist not found",
+        });
+      }
+
+      // Thêm phim vào danh sách xem
+      await watchList.addMovie(movieId);
+
+      res.status(200).json({
+        message: "Movie added to your watchlist!",
+      });
+    });
   } catch (err) {
     console.log(err);
-    res.status(500).send("Server Error");
+    res.status(500).json({
+      message: "Server Error",
+    });
   }
 };
-
-
 
 
