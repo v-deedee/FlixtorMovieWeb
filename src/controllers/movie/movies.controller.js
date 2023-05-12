@@ -182,7 +182,7 @@ module.exports.search = async (req, res) => {
           }
         }
       });
-      res.render('movie/movies', {
+      return res.render('movie/movies', {
         title: 'Search Results',
         results: results || [] 
       });
