@@ -22,7 +22,7 @@ html(lang="en")
             .input-group.shadow.me-2.rounded
               span.input-group-text.p-3.border-0.bg-white
                 i.fa-solid.fa-magnifying-glass.fa-lg
-              input.form-control.p-3.border-0(type="text" name="keyword" id="text-field" placeholder="Enter movie title")
+              input.form-control.text-field.p-3.border-0(type="text" name="keyword" placeholder="Enter movie title")
             button.btn.btn-info.text-light.shadow(type="submit")
               i.fa-solid.fa-arrow-right.fa-xl.p-2
 
@@ -32,14 +32,27 @@ html(lang="en")
           .title-box
             h2.mb-3.text-success-emphasis.border-bottom.border-success.border-2(data-bs-theme="dark") Hot Movies
           .container.p-0
-            .row.row-cols-auto
-              each movie in hotMovies
-                .col-xxl-2.mb-5
-                  .movie-iteme
-                    i.fa-solid.fa-circle-play(style='color: #0db0d9;')
-                    .Hover
-                      .bg-body-tertiary(style="width:190px")
-                        h5.text-nowrap= movie.title
+            .hot-movie.row.row-cols-auto
+              each movie in hotMovies.concat(hotMovies)
+                .col-xxl-2.p-0
+                  .movie-iteme.p-2
+                    a.text-dark.text-decoration-none(href=`/movie/${movie.id}`)
+                      .poster
+                        img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
+                      .bg-body-tertiary(style="width:200px")
+                        h5.movie-title= movie.title
+                        .d-flex.flex-row.justify-content-between
+                          .d-flex.flex-row
+                            p.my-0.mx-1= movie.release.substr(0, 4)
+                            p.my-0.mx-1 |
+                            p.my-0.mx-1.rating
+                              span.rating-value= movie.rating
+                              span.fa.fa-star.text-warning
+                          .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie
+                      i.bi.bi-play-circle-fill
+                    .Hover.bg-body-secondary.rounded
+                      .des
+                        h5= movie.title
                         .d-flex.flex-row.justify-content-between
                           .d-flex.flex-row
                             p.my-0.mx-1= movie.release.substr(0, 4)
@@ -49,34 +62,45 @@ html(lang="en")
                               span.fa.fa-star.text-warning
                               p.my-0.mx-1 |
                               p1.my-0.mx-1= movie.duration
-                      span.rating-value= movie.description 
-                    a.text-decoration-none.text-dark(href=`/movie/${movie.id}`)
-                      img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
-                      .bg-body-tertiary(style="width:200px")
-                        h5.text-nowrap= movie.title
-                        .d-flex.flex-row.justify-content-between
-                          .d-flex.flex-row
-                            p.my-0.mx-1= movie.release.substr(0, 4)
-                            p.my-0.mx-1 |
-                            p.my-0.mx-1.rating
-                              span.rating-value= movie.rating
-                              span.fa.fa-star.text-warning
-                          .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie
+                        div= movie.description
+                      .d-grid.gap-2.mt-3
+                        a.btn.btn-success.text-light.px-3(href=`/movie/${movie.id}`)
+                          |Watch now
+          //- pagination bar
+          if hotMovies.length > 6
+            .hot-movies-pagi
+
+      //- placeholder
+      .text-center.place-holder
+        img(src="https://picsum.photos/1000/120" alt="Random banner")
 
       //- latest update movies section
       if latestUpdate && latestUpdate.length > 0
-        .container.mt-5
+        .container.mt-3
           .title-box
             h2.mb-3.text-success-emphasis.border-bottom.border-success.border-2(data-bs-theme="dark") Latest Movies
           .container.p-0
-            .row.row-cols-auto
+            .latest-movie.row.row-cols-auto
               each movie in latestUpdate
-                .col-xxl-2.mb-5
-                  .movie-iteme
-                    i.fa-solid.fa-circle-play(style='color: #0db0d9;')
-                    .Hover
-                      .bg-body-tertiary(style="width:190px")
-                        h5.text-nowrap= movie.title
+                .col-xxl-2.p-0
+                  .movie-iteme.p-2
+                    a.text-dark.text-decoration-none(href=`/movie/${movie.id}`)
+                      .poster
+                        img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
+                      .bg-body-tertiary(style="width:200px")
+                        h5.movie-title= movie.title
+                        .d-flex.flex-row.justify-content-between
+                          .d-flex.flex-row
+                            p.my-0.mx-1= movie.release.substr(0, 4)
+                            p.my-0.mx-1 |
+                            p.my-0.mx-1.rating
+                              span.rating-value= movie.rating
+                              span.fa.fa-star.text-warning
+                          .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie
+                      i.bi.bi-play-circle-fill
+                    .Hover.bg-body-secondary.rounded
+                      .des
+                        h5= movie.title
                         .d-flex.flex-row.justify-content-between
                           .d-flex.flex-row
                             p.my-0.mx-1= movie.release.substr(0, 4)
@@ -86,11 +110,35 @@ html(lang="en")
                               span.fa.fa-star.text-warning
                               p.my-0.mx-1 |
                               p1.my-0.mx-1= movie.duration
-                      span.rating-value= movie.description 
-                    a.text-decoration-none.text-dark(href=`/movie/${movie.id}`)
-                      img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
+                        div= movie.description
+                      .d-grid.gap-2.mt-3
+                        a.btn.btn-success.text-light.px-3(href=`/movie/${movie.id}`)
+                          |Watch now
+                          
+          //- pagination bar
+          if latestUpdate.length > 6
+            .latest-update-pagi
+          else
+            p.p-3.text-white placeholder
+      //- placeholder
+      if verified
+        .text-center.mb-3.place-holder
+          img(src="https://picsum.photos/1000/125" alt="Random banner")
+      //- Watch list
+      if watchList && watchList.length > 0 && verified === true
+        .container.mt-3
+          .title-box
+            h2.mb-3.text-success-emphasis.border-bottom.border-success.border-2(data-bs-theme="dark") Your Watch List
+          .container.p-0
+            .favorite-movie.row.row-cols-auto
+              each movie in watchList
+                .col-xxl-2.p-0
+                  .movie-iteme.p-2
+                    a.text-dark.text-decoration-none(href=`/movie/${movie.id}`)
+                      .poster
+                        img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
                       .bg-body-tertiary(style="width:200px")
-                        h5.text-nowrap= movie.title
+                        h5.movie-title= movie.title
                         .d-flex.flex-row.justify-content-between
                           .d-flex.flex-row
                             p.my-0.mx-1= movie.release.substr(0, 4)
@@ -99,28 +147,32 @@ html(lang="en")
                               span.rating-value= movie.rating
                               span.fa.fa-star.text-warning
                           .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie
+                      i.bi.bi-play-circle-fill
+                    .Hover.bg-body-secondary.rounded
+                      .des
+                        h5= movie.title
+                        .d-flex.flex-row.justify-content-between
+                          .d-flex.flex-row
+                            p.my-0.mx-1= movie.release.substr(0, 4)
+                            p.my-0.mx-1 |
+                            p.my-0.mx-1.rating
+                              span.rating-value= movie.rating
+                              span.fa.fa-star.text-warning
+                              p.my-0.mx-1 |
+                              p1.my-0.mx-1= movie.duration
+                        div= movie.description
+                      .d-grid.gap-2.mt-3
+                        a.btn.btn-success.text-light.px-3(href=`/movie/${movie.id}`)
+                          |Watch now
 
-      if watchList && watchList.length > 0 && verified === true
-        h2 Your Watch List
-        .container.p-0
-          .row.row-cols-auto
-            each movie in watchList
-              .col-xxl-2.mb-5
-                .movie-iteme
-                  a.text-decoration-none.text-dark(href=`/movie/${movie.id}`)
-                    img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
-                    .bg-body-tertiary(style="width:200px")
-                      h5.text-nowrap= movie.title
-                      .d-flex.flex-row.justify-content-between
-                        .d-flex.flex-row
-                          p.my-0.mx-1= movie.release.substr(0, 4)
-                          p.my-0.mx-1 |
-                          p.my-0.mx-1.rating
-                            span.rating-value= movie.rating
-                            span.fa.fa-star.text-warning
-                        .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie
+          //- pagination bar
+          if watchList.length > 6
+            .watch-list-pagi
+          else
+            p.p-3.text-white placeholder
 
     include ../partials/footer.pug
 
     script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js")
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js")
+    script(type="text/javascript" src="/js/home.js")
