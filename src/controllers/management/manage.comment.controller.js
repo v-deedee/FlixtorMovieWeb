@@ -6,6 +6,10 @@ const Comment = models.comment;
 const Sequelize = models.sequelize;
 
 module.exports.showComments = async (req, res) => {
+  const admin = await User.findByPk(req.userId, {
+    attributes: ["id", "user_name", "email", "password", "role"],
+  });
+
   const commentList = await Comment.findAll({
     attributes: ["id", "content", "violate", "create_at", "update_at"],
     include: [
@@ -28,6 +32,7 @@ module.exports.showComments = async (req, res) => {
   res.render("management/manage_comment", {
     title: "Manage Comments",
     commentList,
+    admin,
   });
 };
 
@@ -39,6 +44,9 @@ module.exports.postManageComments = async (req, res) => {
         where: {
           id: {
             [Op.in]: deleteIds,
+          },
+          violate: {
+            [Op.gte]: 1,
           },
         },
       });
