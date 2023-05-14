@@ -21,9 +21,9 @@ router.post("/users", manageUserController.postManageUsers);
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     if (file.fieldname === "image") {
-      cb(null, "public/images");
+      cb(null, "src/public/images");
     } else if (file.fieldname === "video") {
-      cb(null, "public/videos");
+      cb(null, "src/public/videos");
     }
   },
   filename: function (req, file, cb) {
@@ -36,10 +36,18 @@ const upload = multer({ storage: storage });
 
 router.post(
   "/movies/add",
-  upload.fields([
-    { name: "image", maxCount: 1 },
-    { name: "video", maxCount: 1 },
-  ]),
+  (req, res, next) => {
+    try {
+      upload.fields([{ name: "image" }, { name: "video" }])(req, res, (err) => {
+        if (err) {
+          return next(err);
+        }
+        next();
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
   manageMovieController.postAddMovie
 );
 router.post("/movies/update", manageMovieController.postUpdateMovie);
