@@ -33,8 +33,9 @@ html(lang="en")
             source(src=`/videos/${movie.video}`, type="video/mp4")
       //- action buttons
       .container.py-4.d-flex.justify-content-center
-        form.mx-2(action=`/movie/${movie.id}/watchlist`, method='post')
-          button.btn.btn-light.toggle-btn(type='submit')
+        form#add-form.mx-2(action=`/movie/${movie.id}/watchlist`, method='post')
+          input(type='hidden' name='_csrf' value=csrfToken)
+          button.btn.btn-light.ml-2.toggle-btn(type='submit')
             i.bi.bi-heart
             |   Add to list
         a.btn.btn-light.toggle-btn.mx-2(href="#comment")
@@ -86,7 +87,8 @@ html(lang="en")
               .title-box.mt-5
                 h2.mb-3.text-success-emphasis.border-bottom.border-success.border-2(data-bs-theme="dark") Comment
               //- comment form
-              form(action=`/movie/${movie.id}/comment` method="POST")
+              form#comment-form(action=`/movie/${movie.id}/comment` method="POST")
+                input#movie-id(type="hidden" value=`${movie.id}`)
                 label(for="content" class="form-label")
                 div.d-flex
                   input#comment-input.form-control.p-3(name="content" placeholder="Join the discussion..." required)
@@ -152,3 +154,43 @@ html(lang="en")
 
     script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js")
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js")
+    script.
+      $(document).ready(function() {
+        $('#comment-form').submit(function(event) {
+          event.preventDefault();
+
+          var movieId = $('#movie-id').val();
+          var content = $('#comment-input').val();
+          $.ajax({
+            url: `/movie/${movieId}/comment`,
+            type: 'POST',
+            data: {content: content},
+            success: function(response) {
+              $('#comment-form').trigger('reset');
+              alert(response.message);
+              $('#comment-list').prepend(`<div>${response.comment.content}</div>`);
+            },
+            error: function(error) {
+              alert(error.responseJSON.message);
+              console.log(error);
+            }
+          });
+        });
+      });
+    script.
+      $(document).ready(function() {
+        $('#add-form').submit(function(event) {
+          event.preventDefault();
+          var movieId = $('#movie-id').val();
+          $.ajax({
+            url: `/movie/${movieId}/watchlist`,
+            type: 'POST',
+            success: function(response) {
+              alert(response.message);
+            },
+            error: function(error) {
+              alert(error.responseJSON.message);
+            }
+          });
+        });
+      });

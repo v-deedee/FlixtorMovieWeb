@@ -56,71 +56,165 @@ function getReleaseDateBetween(year) {
 }
 
 module.exports.filterMovies = async (req, res) => {
-  const { year, gerne, country } = req.query;
-  const sort = req.query.sort;
-  let sortOption = {};
-
-  switch (sort) {
-    case 'create_at':
-      sortOption = [['create_at', 'DESC']];
-      break;
-    case 'release':
-      sortOption = [['release', 'DESC']];
-      break;
-    case 'title':
-      sortOption = [['title', 'ASC']];
-      break;
-    case 'rating':
-      sortOption = [['rating', 'DESC']];
-      break;
-    default:
-      sortOption = [];
-  }
-
   try {
-    const movies = await Movie.findAll({
-      where: {
-        release: {
-          [Op.between]: getReleaseDateBetween(year)
-        }
-      },
-      include: [
-        {
-          model: Producer,
-          where: {
-            country: country || { [Op.ne]: null }
+    if (!req.session.token) {
+      const { year, gerne, country } = req.query;
+      const sort = req.query.sort;
+      let sortOption = {};
+
+      switch (sort) {
+        case 'create_at':
+          sortOption = [['create_at', 'DESC']];
+          break;
+        case 'release':
+          sortOption = [['release', 'DESC']];
+          break;
+        case 'title':
+          sortOption = [['title', 'ASC']];
+          break;
+        case 'rating':
+          sortOption = [['rating', 'DESC']];
+          break;
+        default:
+          sortOption = [];
+      }
+      const movies = await Movie.findAll({
+        where: {
+          release: {
+            [Op.between]: getReleaseDateBetween(year)
           }
         },
-        {
-          model: Gerne,
-          where: {
-            name: gerne || { [Op.ne]: null }
+        include: [
+          {
+            model: Producer,
+            where: {
+              country: country || { [Op.ne]: null }
+            }
+          },
+          {
+            model: Gerne,
+            where: {
+              name: gerne || { [Op.ne]: null }
+            }
           }
-        }
-      ],
-      order: sortOption
-    });
-    res.render('movie/movies', { title: 'Filtered Movies', movies });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: 'Internal server error' });
+        ],
+        order: sortOption
+      });
+      return res.render('movie/movies', { title: 'Filtered Movies', movies })
+    };
+    jwt.verify(req.session.token, authConfig.secret, async (err, decoded) => {
+      if (err) {
+        console.log(err);
+        return res.status(401).json({
+          message: "Unauthorized!",
+        });
+      }
+
+      const user = await User.findByPk(decoded.id, {
+        attributes: ["id", "user_name"],
+      });
+
+      if (!user) {
+        return res.status(403).json({
+          message: "Invalid user!",
+        });
+      }
+
+      const { year, gerne, country } = req.query;
+      const sort = req.query.sort;
+      let sortOption = {};
+
+      switch (sort) {
+        case 'create_at':
+          sortOption = [['create_at', 'DESC']];
+          break;
+        case 'release':
+          sortOption = [['release', 'DESC']];
+          break;
+        case 'title':
+          sortOption = [['title', 'ASC']];
+          break;
+        case 'rating':
+          sortOption = [['rating', 'DESC']];
+          break;
+        default:
+          sortOption = [];
+      }
+        const movies = await Movie.findAll({
+          where: {
+            release: {
+              [Op.between]: getReleaseDateBetween(year)
+            }
+          },
+          include: [
+            {
+              model: Producer,
+              where: {
+                country: country || { [Op.ne]: null }
+              }
+            },
+            {
+              model: Gerne,
+              where: {
+                name: gerne || { [Op.ne]: null }
+              }
+            }
+          ],
+          order: sortOption
+        });
+        res.render('movie/movies', { title: 'Filtered Movies', movies, user, verified: true});
+    }); 
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Server Error');
   }
-}
+};
 
 // GET /search
 module.exports.search = async (req, res) => {
-  const { keyword } = req.query;
   try {
-    const results = await Movie.findAll({
-      where: {
-        title: {
-          [Op.like]: `%${keyword}%`
+    if (!req.session.token) {
+      const { keyword } = req.query;
+      const results = await Movie.findAll({
+        where: {
+          title: {
+            [Op.like]: `%${keyword}%`
+          }
         }
+      });
+      return res.render('movie/movies', {
+        title: 'Search Results',
+        results: results || [] 
+      });
+    }
+    jwt.verify(req.session.token, authConfig.secret, async (err, decoded) => {
+      if (err) {
+        console.log(err);
+        return res.status(401).json({
+          message: "Unauthorized!",
+        });
       }
-    });
-    res.render('movie/movies', {
-      title: 'Search Results',
-      results: results || [] 
+
+      const user = await User.findByPk(decoded.id, {
+        attributes: ["id", "user_name"],
+      });
+
+      if (!user) {
+        return res.status(403).json({
+          message: "Invalid user!",
+        });
+      }
+
+      const { keyword } = req.query;
+      const results = await Movie.findAll({
+        where: {
+          title: {
+            [Op.like]: `%${keyword}%`
+          }
+        }
+      });
+      res.render('movie/movies', { title: 'Search Results',
+      results: results || [], user, verified: true});
     });
   } catch (err) {
     console.log(err);
