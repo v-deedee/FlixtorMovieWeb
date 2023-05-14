@@ -71,8 +71,8 @@ html(lang="en")
                             td.make-admin
                                 .form-check(style=`display: ${user.role === 'admin' ? 'none' : 'block'}`)
                                     input.form-check-input(type='checkbox', name='makeAdminCheckBox', value=user.id)
-                else 
-                    .alert.alert-danger(role= 'alert') SERVER ERROR.
+            else 
+                .alert.alert-danger(role= 'alert') SERVER ERROR.
     script(src='/js/tableAction.js')
     script(src='/js/manageUsers.js')
 
