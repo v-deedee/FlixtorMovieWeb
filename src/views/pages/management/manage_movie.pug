@@ -1,0 +1,202 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset='UTF-8')
+    meta(http-equiv='X-UA-Compatible' content='IE=edge')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0', required)
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js')
+    link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous")
+    // --======== CSS=======
+    link(rel="stylesheet" type="text/css" href="/css/id.css")
+    link(rel="stylesheet" type="text/css" href="/css/admin.css")
+    // --===== Iconscout CSS =====
+    link(rel='stylesheet' href='https://unicons.iconscout.com/release/v4.0.0/css/line.css')
+    title #{ title }
+  body
+    nav
+      .menuitems
+        ul.nav-links
+          li
+            a(href='/management/users')
+              span.link-name Manage user
+          li
+            a(href='/management/movies') 
+              span.link-name Manage movie
+          li
+            a(href='/management/comments')
+              span.link-name Manage comment
+
+    section.dashboard
+        .top
+          h1.uil.uil-bars.sidebar-toggle
+        .dash-content
+          .title
+            i.uil.uil-clock-three
+            span.text User list
+          .input-group
+            i.uil.uil-search
+            input(type='search' placeholder='Search Data...')
+          .feture 
+            button#btn-add.btn.btn-info(type='button', data-bs-toggle='modal', data-bs-target='#addMovieModal') Add 
+            button#btn-delete.btn.btn-danger(type='button') Delete 
+          .activity
+            if movieList && movieList.length > 0
+              table
+                thead
+                  tr
+                    th
+                      | Id 
+                    th
+                      | Title  
+                    th.sort
+                      | Rating 
+                      span.icon-arrow &UpArrow;
+                    th.sort
+                      | Duration
+                      span.icon-arrow &UpArrow;
+                    th
+                      | Country
+                    th
+                      | Gerne
+                    th
+                      | Director
+                    th
+                      | Producer
+                    th
+                      | More Infor
+                    th
+                      | Delete
+                tbody
+                each movie in movieList
+                  tr
+                    td.movie-value #{ movie.id }
+                    td.movie-value #{ movie.title }
+                    td.movie-value #{ movie.rating }
+                    td.movie-value #{ movie.duration }
+                    td.movie-value #{ movie.producer.country }
+                    td.movie-value #{ movie.gernes.map((gerne) => gerne.name).join(',') }
+                    td.movie-value #{ movie.director.full_name }
+                    td.movie-value #{ movie.producer.name }
+                    td.more-infor.update
+                        btn.more-btn(type='button', onclick='popUpMoreModal(event)') more
+                    td.check-box
+                        .form-check
+                            input.form-check-input(type='checkbox', name='deleteMovieCheckBox', value=movie.id)
+                    td.movie-value-hide.d-none
+                        .release-hide #{ movie.release }
+                        .actor-hide #{ movie.actors.map((actor) => actor.full_name).join(',') }   
+                        .descrip-hide #{ movie.description } 
+                        .img-hide #{ movie.image }  
+                        .video-hide #{ movie.video }   
+        .pop-ups 
+            // Add Movie Modal
+            #addMovieModal.modal.fade(tabindex='-1', aria-labelledby='exampleModalLabel', aria-hidden='true')
+                .modal-dialog
+                    .modal-content
+                        .modal-header
+                            h5#exampleModalLabel.modal-title Add Movie Form
+                            button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+                        .modal-body
+                            form#addMovieForm(action='movies/add', method='POST', enctype="multipart/form-data")
+                                .form-floating.mb-3
+                                    input#titleMovie.form-control(type='text', name='title', required)
+                                    label(for='titleMovie') Title 
+                                .form-floating.mb-3
+                                    textarea#descriptionMovie.form-control(rows="5", name='description', required)
+                                    label(for='descriptionMovie') Description 
+                                .row.group-input.mb-3 
+                                    .col.form-floating
+                                        input#ratingMovie.form-control(type='number', step="0.1", min="0.0", max="10.0", name='rating', required)
+                                        label(for='ratingMovie') Rating 
+                                    .col.form-floating
+                                        input#countryMovie.form-control(type='text', name='country', required)
+                                        label(for='countryMovie') Country 
+                                .row.group-input.mb-3 
+                                    .col.form-floating
+                                        input#durationMovie.form-control(type='time', name='duration', step="60", min="00:30", max="03:00", required)
+                                        label(for='durationMovie') Duration 
+                                    .col.form-floating
+                                        input#releaseMovie.form-control(type='date', name='release', required)
+                                        label(for='releaseMovie') Release   
+                                .row.group-input.mb-3 
+                                    .col.form-floating
+                                        input#imageMovie.form-control(type='file', name='image', required)
+                                        label(for='imageMovie') Image 
+                                    .col.form-floating
+                                        input#videoMovie.form-control(type='file', name='video', required)
+                                        label(for='videoMovie') Video
+                                .row.group-input.mb-3 
+                                    .col.form-floating
+                                        input#directorMovie.form-control(type='text', name='director', required)
+                                        label(for='directorMovie') Director 
+                                    .col.form-floating
+                                        input#producerMovie.form-control(type='text', name='producer', required)
+                                        label(for='producerMovie') Producer
+                                .form-floating.mb-3
+                                    input#actorMovie.form-control(type='text', name='actorList', required)
+                                    label(for='actorMovie') Actor 
+                                    small#help.form-text Split by ','
+                                .form-floating.mb-3
+                                    input#gerneMovie.form-control(type='text', name='gerneList', required)
+                                    label(for='gerneMovie') Gerne 
+                                    small#help.form-text Split by ','
+                                button.btn.btn-primary(type='submit') Submit
+            // More Infor Modal
+            #moreInforModal.modal.fade(tabindex='-1', aria-labelledby='exampleModalLabel', aria-hidden='true')
+                .modal-dialog
+                    .modal-content
+                        .modal-header
+                            h5.modal-title Movie Information  
+                            button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+                        .modal-body
+                            form#moreInforForm(action='/management/movies/update', method='POST')
+                                .form-floating.mb-3.d-none
+                                    input#idUpdateMovie.form-control(type='number', name='updateId')
+                                    label(for='idUpdateMovie') Id
+                                .form-floating.mb-3
+                                    input#titleUpdateMovie.form-control(type='text', name='updateTitle')
+                                    label(for='titleUpdateMovie') Title 
+                                .form-floating.mb-3
+                                    textarea#descriptionUpdateMovie.form-control(rows="5", name='updateDescription')
+                                    label(for='descriptionUpdateMovie') Description 
+                                .row.group-input.mb-3 
+                                    .col.form-floating
+                                        input#ratingUpdateMovie.form-control(type='number', step="0.1", min="0.0", max="10.0", name='updateRating')
+                                        label(for='ratingUpdateMovie') Rating 
+                                    .col.form-floating
+                                        input#countryUpdateMovie.form-control(type='text', name='updateCountry', disabled, readonly)
+                                        label(for='countryUpdateMovie') Country 
+                                .row.group-input.mb-3 
+                                    .col.form-floating
+                                        input#durationUpdateMovie.form-control(type='time', name='updateDuration', step="60", min="00:30", max="03:00")
+                                        label(for='durationUpdateMovie') Duration 
+                                    .col.form-floating
+                                        input#releaseUpdateMovie.form-control(type='date', name='updateRelease')
+                                        label(for='releaseUpdateMovie') Release   
+                                .row.group-input.mb-3 
+                                    .col.form-floating
+                                        input#imageUpdateMovie.form-control(type='text', name='updateImage', disabled, readonly)
+                                        label(for='imageUpdateMovie') Image 
+                                    .col.form-floating
+                                        input#videoUpdateMovie.form-control(type='text', name='updateVideo', disabled, readonly)
+                                        label(for='videoUpdateMovie') Video
+                                .row.group-input.mb-3 
+                                    .col.form-floating
+                                        input#directorUpdateMovie.form-control(type='text', name='updateDirector', disabled, readonly)
+                                        label(for='directorUpdateMovie') Director 
+                                    .col.form-floating
+                                        input#producerUpdateMovie.form-control(type='text', name='updateProducer', disabled, readonly)
+                                        label(for='producerUpdateMovie') Producer
+                                .form-floating.mb-3
+                                    input#actorUpdateMovie.form-control(type='text', name='updateActorList', disabled, readonly)
+                                    label(for='actorUpdateMovie') Actor 
+                                .form-floating.mb-3
+                                    input#gerneUpdateMovie.form-control(type='text', name='updateGerneList', disabled, readonly)
+                                    label(for='gerneUpdateMovie') Gerne 
+                                button.btn.btn-primary(type='submit') Submit
+                        
+    // Bootstrap 5 JS
+    script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js')                
+    script(src='/js/tableAction.js')
+    script(src="/js/manageMovie.js") 
+    

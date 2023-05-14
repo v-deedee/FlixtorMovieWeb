@@ -59,12 +59,12 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: true,
       createdAt: "create_at",
       updatedAt: "update_at",
-      indexes: [
-        {
-          unique: true,
-          fields: ["title", "description"],
-        },
-      ],
+      // indexes: [
+      //   {
+      //     unique: true,
+      //     fields: ["title", "description"],
+      //   },
+      // ],
     }
   );
 };

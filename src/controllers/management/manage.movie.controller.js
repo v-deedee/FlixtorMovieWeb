@@ -1,15 +1,20 @@
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 const models = require("../../models/index");
+const User = models.user;
 const Movie = models.movie;
 const Actor = models.actor;
 const Cast = models.cast;
 const Director = models.director;
 const Producer = models.producer;
-const Gener = models.gerne;
+const Gerne = models.gerne;
 const Category = models.category;
 const Sequelize = models.sequelize;
 
 module.exports.showMovies = async (req, res) => {
+  const admin = await User.findByPk(req.userId, {
+    attributes: ["id", "user_name", "email", "password", "role"],
+  });
+
   const movieList = await Movie.findAll({
     attributes: [
       "id",
@@ -35,18 +40,30 @@ module.exports.showMovies = async (req, res) => {
         attributes: ["full_name"],
       },
       {
-        model: Gener,
+        model: Gerne,
         attributes: ["name"],
       },
     ],
-    raw: true,
+    distinct: true,
   });
 
-  //   userList.forEach((user) => {
-  //     console.log(user);
-  //     console.log(user.user_name);
-  //   });
-  res.render("management/manage_movie", { title: "Manage Movies", movieList });
+  // movieList.forEach((movie) => {
+  //   // console.log(movie);
+  //   console.log(movie.id);
+  //   console.log(movie.title);
+  //   console.log(movie.description);
+  //   console.log(movie.rating);
+  //   console.log(movie.duration);
+  //   console.log(movie.actors.map((actor) => actor.full_name));
+  //   console.log(movie.gernes.map((gerne) => gerne.name));
+  //   console.log(movie.director.full_name);
+  //   console.log(movie.producer.name);
+  // });
+  res.render("management/manage_movie", {
+    title: "Manage Movies",
+    movieList,
+    admin,
+  });
 };
 
 module.exports.postDeleteMovie = async (req, res) => {
@@ -68,13 +85,18 @@ module.exports.postDeleteMovie = async (req, res) => {
 
 module.exports.postUpdateMovie = async (req, res) => {
   try {
+    const temp = req.body.updateTitle.toLowerCase().split(" ");
+    for (let i = 0; i < temp.length; i++) {
+      temp[i] = temp[i][0].toUpperCase() + temp[i].slice(1).toLowerCase();
+    }
+    const titleMoive = temp.join(" ");
     await Movie.update(
       {
-        title: req.body.title,
-        description: req.body.description,
-        rating: req.body.rating,
-        duartion: req.body.duartion,
-        release: req.body.release,
+        title: titleMoive,
+        description: req.body.updateDescription,
+        rating: req.body.updateRating,
+        duartion: req.body.UpdateDuartion,
+        release: req.body.updateRelease,
         update_at: Sequelize.literal("NOW()"),
       },
       {
@@ -92,67 +114,117 @@ module.exports.postUpdateMovie = async (req, res) => {
 
 module.exports.postAddMovie = async (req, res) => {
   try {
-    // tìm/tạo actor
+    // ACTOR
     const actorIds = [];
-    for (const actorName of req.body.actorList) {
+    const actors = req.body.actorList.split(",");
+    for (const actorInput of actors) {
+      //format input
+      const words = actorInput.toLowerCase().split(" ");
+      for (let i = 0; i < words.length; i++) {
+        words[i] = words[i][0].toUpperCase() + words[i].slice(1).toLowerCase();
+      }
+      const actorName = words.join(" ");
+      //find or create
       const [actor, created] = await Actor.findOrCreate({
-        where: { name: actorName },
+        where: { full_name: actorName },
         defaults: {},
       });
       actorIds.push(actor.id);
     }
+    // console.log("Insert actor", actorIds);
 
-    // tìm/tạo genre
-    const genreIds = [];
-    for (const genreName of req.body.genreList) {
-      const [genre, created] = await Actor.findOrCreate({
+    // GERNE
+    const gerneIds = [];
+    const gernes = req.body.gerneList.split(",");
+    for (const genreInput of gernes) {
+      // format input
+      //format input
+      const words = genreInput.toLowerCase().split(" ");
+      for (let i = 0; i < words.length; i++) {
+        words[i] = words[i][0].toUpperCase() + words[i].slice(1).toLowerCase();
+      }
+      const genreName = words.join(" ");
+      //find or create
+      const [gerne, created] = await Gerne.findOrCreate({
         where: { name: genreName },
         defaults: {},
       });
-      genreIds.push(genre.id);
+      gerneIds.push(gerne.id);
     }
+    // console.log("Insert gerne", gerneIds);
 
-    // tìm/tạo director
+    //DIRECTOR
+    //format input
+    const words = req.body.director.toLowerCase().split(" ");
+    for (let i = 0; i < words.length; i++) {
+      words[i] = words[i][0].toUpperCase() + words[i].slice(1).toLowerCase();
+    }
+    const directorName = words.join(" ");
+    //find or create
     const [director, createdDirector] = await Director.findOrCreate({
-      where: { name: req.body.director },
+      where: { full_name: directorName },
       defaults: {},
     });
+    // console.log("Insert director", director);
 
-    // tìm/tạo producer
+    //PRODUCER
+    //format input
+    const text = req.body.producer.toLowerCase().split(" ");
+    for (let i = 0; i < text.length; i++) {
+      text[i] = text[i][0].toUpperCase() + text[i].slice(1).toLowerCase();
+    }
+    const producerName = text.join(" ");
+    const national = req.body.country.toLowerCase().split(" ");
+    for (let i = 0; i < national.length; i++) {
+      national[i] =
+        national[i][0].toUpperCase() + national[i].slice(1).toLowerCase();
+    }
+    const countryName = national.join(" ");
+    //find or create
     const [producer, createdProducer] = await Producer.findOrCreate({
-      where: { name: req.body.producer },
+      where: { name: producerName, country: countryName },
       defaults: {},
     });
 
-    // tạo film
+    // console.log("Insert producer", producer);
+
+    //MOVIE
+    //format input
+    const temp = req.body.title.toLowerCase().split(" ");
+    for (let i = 0; i < temp.length; i++) {
+      temp[i] = temp[i][0].toUpperCase() + temp[i].slice(1).toLowerCase();
+    }
+    const titleMoive = temp.join(" ");
     const movie = await Movie.create({
-      title: req.body.title,
+      title: titleMoive,
       description: req.body.description,
       rating: req.body.rating,
-      duartion: req.body.duartion,
+      duration: req.body.duration,
       release: req.body.release,
       image: req.files.image ? req.files.image[0].filename : null,
       video: req.files.video ? req.files.video[0].filename : null,
-      director: director.id,
-      producer: producer.id,
+      director_id: director.id,
+      producer_id: producer.id,
       create_at: Sequelize.literal("NOW()"),
     });
+    // console.log("Insert movie", movie);
 
-    // tạo cast
+    // CAST
     for (const actorId of actorIds) {
       await Cast.create({
         actor_id: actorId,
         movie_id: movie.id,
       });
     }
-
-    // tạo category
-    for (const genreId of genreIds) {
+    // console.log("insert cast");
+    // CATEGORY
+    for (const gerneId of gerneIds) {
       await Category.create({
-        genre_id: genreId,
+        gerne_id: gerneId,
         movie_id: movie.id,
       });
     }
+    // console.log("insert category");
 
     res.status(200).json({ message: "Success." });
   } catch (error) {
