@@ -105,9 +105,9 @@ html(lang="en")
                         h5.card-title.text-success= comment.user.user_name
                         span.text-muted= comment.create_at
                         p.mt-1.card-text= comment.content
-              .d-grid.gap-2.mb-5
-                button.btn.btn-info.text-light-emphasis(type="button")
-                  |Load more comments
+              //- .d-grid.gap-2.mb-5
+              //-   button.btn.btn-info.text-light-emphasis(type="button")
+              //-     |Load more comments
           
           //- recommendation
           .col-xxl-4
@@ -154,43 +154,3 @@ html(lang="en")
 
     script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js")
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js")
-    script.
-      $(document).ready(function() {
-        $('#comment-form').submit(function(event) {
-          event.preventDefault();
-
-          var movieId = $('#movie-id').val();
-          var content = $('#comment-input').val();
-          $.ajax({
-            url: `/movie/${movieId}/comment`,
-            type: 'POST',
-            data: {content: content},
-            success: function(response) {
-              $('#comment-form').trigger('reset');
-              alert(response.message);
-              $('#comment-list').prepend(`<div>${response.comment.content}</div>`);
-            },
-            error: function(error) {
-              alert(error.responseJSON.message);
-              console.log(error);
-            }
-          });
-        });
-      });
-    script.
-      $(document).ready(function() {
-        $('#add-form').submit(function(event) {
-          event.preventDefault();
-          var movieId = $('#movie-id').val();
-          $.ajax({
-            url: `/movie/${movieId}/watchlist`,
-            type: 'POST',
-            success: function(response) {
-              alert(response.message);
-            },
-            error: function(error) {
-              alert(error.responseJSON.message);
-            }
-          });
-        });
-      });

@@ -1,10 +1,127 @@
 * {
   margin: 0;
   padding: 0;
-
+  list-style: none;
+  text-decoration: none;
   box-sizing: border-box;
-  font-family: sans-serif;
 }
+
+.wrapper .header {
+  z-index: 1;
+  background: #22242A;
+  position: fixed;
+  width: calc(100% - 0%);
+  height: 70px;
+  display: flex;
+  top: 0;
+}
+
+.wrapper .header .header-menu {
+  width: calc(100% - 0%);
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.wrapper .header .header-menu .title {
+  color: #fff;
+  font-size: 25px;
+  text-transform: uppercase;
+  font-weight: 900;
+  margin-left: 50px;
+}
+
+.wrapper .header .header-menu .sidebar-btn {
+  color: #fff;
+  position: absolute;
+  font-size: 22px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.3s;
+  transition-property: color;
+}
+
+.wrapper .header .header-menu .sidebar-btn:hover {
+  color: #4CCEEB;
+}
+
+.wrapper .sidebar {
+  z-index: 1;
+  background: #2F323A;
+  position: fixed;
+  top: 70px;
+  width: 250px;
+  height: calc(100% - 0%);
+  transition: 0.3s;
+  transition-property: width;
+  overflow-y: auto;
+}
+
+.wrapper .sidebar .sidebar-menu {
+  overflow: hidden;
+}
+
+.wrapper .sidebar .sidebar-menu .item .menu-btn {
+  display: block;
+  position: relative;
+  padding: 25px 20px;
+  transition: 0.3s;
+  transition-property: color;
+  text-decoration: none;
+  color: #fff;
+}
+
+.wrapper .sidebar .sidebar-menu .item.active .menu-btn {
+  color: #4CCEEB;
+}
+
+.wrapper .sidebar .sidebar-menu .item .menu-btn:hover {
+  color: #4CCEEB;
+}
+
+.wrapper .sidebar .sidebar-menu .item .menu-btn i {
+  margin-right: 20px;
+}
+
+.wrapper .main-container {
+  width: (100% - 250px);
+  margin-top: 70px;
+  margin-left: 250px;
+  padding: 15px;
+  height: 100vh;
+  transition: 0.3s;
+}
+
+.wrapper.mycollapse .sidebar {
+  width: 70px;
+}
+
+.wrapper.mycollapse .sidebar a span {
+  display: none;
+}
+
+.wrapper.mycollapse .sidebar .sidebar-menu .item .menu-btn {
+  font-size: 1.2rem;
+}
+
+.wrapper.mycollapse .main-container {
+  width: (100% - 70px);
+  margin-left: 70px;
+}
+
+.action-btn {
+  width:100%;
+  display: flex;
+  justify-content: right;
+}
+
+.dash-content .option {
+  display: flex;
+  justify-content: space-between;
+}
+
 main.table {
   width: 82vw;
   height: 90vh;
@@ -16,6 +133,11 @@ main.table {
 
   overflow: hidden;
 }
+
+/* .toggle-button {
+  width: fit-content;
+  font-size: 2.5rem;
+} */
 
 .table_header {
   width: 100%;
@@ -36,13 +158,24 @@ main.table {
   background-color: var(--panel-color);
   padding: 0 0.1rem;
   border-radius: 2rem;
-  color: #0002;
+  color: #000;
 
   display: flex;
-  justify-content: center;
   align-items: center;
 
   transition: 0.2s;
+}
+
+.input-group-text {
+  border-radius: 2rem;
+}
+
+.text-field:focus{
+  box-shadow: none;
+}
+
+input.text-field {
+  border-radius: 2rem;
 }
 
 .input-group:hover {
@@ -54,7 +187,7 @@ main.table {
 
 .input-group input {
   width: 100%;
-  padding: 0 0.5rem 0 0.3rem;
+  /* padding: 0 0.5rem 0 0.3rem; */
   background-color: transparent;
   border: none;
   outline: none;

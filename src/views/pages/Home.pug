@@ -33,7 +33,7 @@ html(lang="en")
             h2.mb-3.text-success-emphasis.border-bottom.border-success.border-2(data-bs-theme="dark") Hot Movies
           .container.p-0
             .hot-movie.row.row-cols-auto
-              each movie in hotMovies.concat(hotMovies)
+              each movie in hotMovies
                 .col-xxl-2.p-0
                   .movie-iteme.p-2
                     a.text-dark.text-decoration-none(href=`/movie/${movie.id}`)

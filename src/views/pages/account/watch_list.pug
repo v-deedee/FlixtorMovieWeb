@@ -7,24 +7,58 @@ html
         link(rel="stylesheet" type="text/css" href="/css/account.css")
         link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet")
         link(href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css', rel='stylesheet')
+        script(src="https://kit.fontawesome.com/1de5e0d4fc.js" crossorigin="anonymous")
     body
         header 
             include ../../partials/header.pug
         main
-            .container
-                .mt-5.mx-2.row.justify-content-center
-                    .col-8
+            //- path
+            .bg-secondary.text-light
+                .container.py-2
+                    |Home / Movies / #{user.user_name}
+            .container.rounded.mb-5
+                .mt-5.row
+                    .col-xxl-4.p-5.rounded.shadow
+                        .avatar.text-center
+                            img(src="/images/user.png" width="200" height="200")
+                        ul.list-unstyled.mt-3.ps-5
+                            li.py-3.fs-5
+                                span.meta.text-success Username:
+                                span  #{user.user_name}
+                            li.py-3.fs-5
+                                span.meta.text-success Email:
+                                span  #{user.email}
+                            li.py-3.fs-5
+                                span.meta.text-success Movies in list:
+                                span  #{movieInWatchList.length}
+                        .d-grid.gap-2
+                            a.btn.btn-outline-success.mx-5(href='/account/profile')
+                                |Edit profile
+                    .col-xxl-8.px-4.rounded.shadow
                         //- title
-                        .title-box.mb-5
+                        .title-box.my-3
                             h2.mb-3.text-success-emphasis.border-bottom.border-success.border-2(data-bs-theme="dark") Watch List
-                        .row.row-cols-auto
+                        .movie-list.row.row-cols-auto.mb-5
                             each movie in movieInWatchList
-                                .col-xxl-3.mb-5
-                                    .movie-iteme
-                                        i.fa-solid.fa-circle-play(style='color: #0db0d9;')
-                                        .Hover
-                                            .bg-body-tertiary(style="width:190px")
-                                                h5.text-nowrap= movie.title
+                                .col-xxl-3.p-0
+                                    .movie-iteme.p-2
+                                        a.text-dark.text-decoration-none(href=`/movie/${movie.id}`)
+                                            .poster
+                                                img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
+                                            .bg-body-tertiary(style="width:200px")
+                                                h5.movie-title= movie.title
+                                                .d-flex.flex-row.justify-content-between
+                                                    .d-flex.flex-row
+                                                        p.my-0.mx-1= movie.release.substr(0, 4)
+                                                        p.my-0.mx-1 |
+                                                        p.my-0.mx-1.rating
+                                                            span.rating-value= movie.rating
+                                                            span.fa.fa-star.text-warning
+                                                    .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie
+                                            i.bi.bi-play-circle-fill
+                                        .Hover.bg-body-secondary.rounded
+                                            .des
+                                                h5= movie.title
                                                 .d-flex.flex-row.justify-content-between
                                                     .d-flex.flex-row
                                                         p.my-0.mx-1= movie.release.substr(0, 4)
@@ -34,36 +68,19 @@ html
                                                             span.fa.fa-star.text-warning
                                                             p.my-0.mx-1 |
                                                             p1.my-0.mx-1= movie.duration
-                                            div.d-flex.flex-column                    
-                                                span.rating-value= movie.description 
+                                                .text-align-justify= movie.description
+                                            .d-grid.gap-2.mt-3
                                                 a.btn.btn-danger.text-light(href=`/account/watch_list/${movie.id}/remove`)
-                                                        | Remove
-                                        a.text-decoration-none.text-dark(href=`/movie/${movie.id}`)
-                                            img(src=`/images/${movie.image}` alt=`${movie.title}` width="200" height="290")
-                                            .bg-body-tertiary(style="width:200px")
-                                                h5= movie.title
-                                                .d-flex.flex-row.justify-content-between
-                                                    .d-flex.flex-row
-                                                        p.my-0.mx-1= movie.release.substr(0, 4)
-                                                        p.my-0.mx-1 |
-                                                        p.my-0.mx-1.rating
-                                                        span.rating-value= movie.rating
-                                                        span.fa.fa-star.text-warning
-                                                    .rounded.text-light.p-1.mx-2.mb-1.bg-success(style="font-size: 0.7rem") Movie                     
+                                                    | Remove
+                        //- pagination bar
+                        if movieInWatchList.length > 8
+                            .pagi
                         
-                    .col-4
-                        ul.side-bar.list-unstyled.float-end.w-50
-                            li.mt-3.mb-2
-                                a.btn.btn-primary.w-100.text-start(href='/account/profile', role='button')
-                                    i.bi.bi-person-lines-fill  Profile
-                            li.mb-2
-                                a.btn.btn-primary.w-100.text-start(href='/account/watch_list', role='button')
-                                    i.bi.bi-heart  Watch List
-                            li.mb-2
-                                a.btn.btn-primary.w-100.text-start(href='/account/signout', role='button')
-                                    i.bi.bi-box-arrow-right  Sign Out
+                    
         footer 
             include ../../partials/footer.pug   
     
-    script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js')
-    script(src="https://kit.fontawesome.com/1de5e0d4fc.js" crossorigin="anonymous")
+    script(src="/js/filter.js")
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js")
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js")
+    script(type="text/javascript" src="/js/profile.js")

@@ -29,7 +29,7 @@ html(lang="en")
         .title-box.mb-4
           h2.mb-3.text-success-emphasis.border-bottom.border-success.border-2(data-bs-theme="dark")
             if results && results.length > 0
-              | Search Results
+              | Results for: '#{keyword}'
             else
               | Movies
 
@@ -145,7 +145,7 @@ html(lang="en")
 
         //- result field
         if results && results.length > 0
-          .container.p-0
+          .container.p-0.mb-5
             .result-list.row.row-cols-auto
               each movie in results
                 .col-xxl-2.p-0
@@ -181,11 +181,11 @@ html(lang="en")
                         a.btn.btn-success.text-light.px-3(href=`/movie/${movie.id}`)
                           |Watch now
           //- pagination bar
-          if results.length > 0
+          if results.length > 12
             .result-pagi
         //- movies section
         if movies && movies.length > 0
-          .container.p-0
+          .container.p-0.mb-5
             .movie-list.row.row-cols-auto
               each movie in movies
                 .col-xxl-2.p-0
@@ -221,7 +221,7 @@ html(lang="en")
                         a.btn.btn-success.text-light.px-3(href=`/movie/${movie.id}`)
                           |Watch now
           //- pagination bar
-          if movies.length > 6
+          if movies.length > 12
             .pagi
 
     include ../../partials/footer.pug

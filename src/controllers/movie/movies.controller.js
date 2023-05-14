@@ -184,7 +184,8 @@ module.exports.search = async (req, res) => {
       });
       return res.render('movie/movies', {
         title: 'Search Results',
-        results: results || [] 
+        results: results || [],
+        keyword
       });
     }
     jwt.verify(req.session.token, authConfig.secret, async (err, decoded) => {
@@ -214,7 +215,7 @@ module.exports.search = async (req, res) => {
         }
       });
       res.render('movie/movies', { title: 'Search Results',
-      results: results || [], user, verified: true});
+      results: results || [], user, verified: true, keyword});
     });
   } catch (err) {
     console.log(err);
