@@ -1,0 +1,49 @@
+main {
+    min-height: 1000px;
+}
+
+img {
+    vertical-align: middle;
+    border-radius: 5px;
+}
+
+.Hover {
+    position: absolute;
+    max-width: 200px;
+    background: #fff;
+    color: #010708c0;
+    padding: .5rem;
+    width: max-content;
+    border-radius: 5px;
+    margin-top: 250px;
+    transform: scale(0);
+    transition: 0.25s ease-in-out;
+    justify-content: space-between;
+}
+
+.movie-iteme:hover .Hover {
+    display: block;
+    transform: scale(1);
+}
+
+.movie-iteme i {
+    position: absolute;
+    font-size: 50px;
+    margin-left: 68px;
+    margin-top: 120px;
+    width: 400px;
+    height: 300px;
+    transform: scale(0);
+    transition: 0.25s ease-in-out;
+    justify-content: space-between
+}
+
+.movie-iteme:hover i {
+    display: block;
+    transform: scale(1);
+}
+
+.title-box {
+    width: fit-content;
+    block-size: fit-content;
+}
