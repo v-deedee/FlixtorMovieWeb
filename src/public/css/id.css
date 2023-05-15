@@ -352,3 +352,9 @@ thead th.active,
 tbody td.active {
   color: #4da3ff;
 }
+
+#imageMovie, #videoMovie {
+  height: 70px;
+  padding-top: 2.3rem;
+}
+
