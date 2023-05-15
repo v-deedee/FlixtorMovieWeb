@@ -23,7 +23,6 @@ function getPageList(totalPages, page, maxLength) {
 }
 
 const movieList = document.querySelectorAll(".movie-list .movie-iteme");
-const resultList = document.querySelectorAll(".result-list .movie-iteme");
 
 function setHoverEffect(movieList) {
     let max = 0;
@@ -38,16 +37,14 @@ function setHoverEffect(movieList) {
 
 $(function() {
     setHoverEffect(movieList);
-    setHoverEffect(resultList);
     window.addEventListener("resize", () => {
         setHoverEffect(movieList);
-        setHoverEffect(resultList);
     });
 })
 
 $(function() {
     var numberOfItems = $(".movie-list .movie-iteme").length;
-    var limitPerPage = 12; // How many card items visible per page
+    var limitPerPage = 8; // How many card items visible per page
     var totalPages = Math.ceil(numberOfItems / limitPerPage);
     var paginationSize = 5; // How many page elements visible in the paginaiton
     var currentPage;
@@ -96,60 +93,5 @@ $(function() {
 
     $(".pagi .previous-page").on("click", function() {
         return setHoverEffect(movieList);
-    });
-});
-
-$(function() {
-    var numberOfItems = $(".result-list .movie-iteme").length;
-    var limitPerPage = 12; // How many card items visible per page
-    var totalPages = Math.ceil(numberOfItems / limitPerPage);
-    var paginationSize = 5; // How many page elements visible in the paginaiton
-    var currentPage;
-    
-
-    function showPage(whichPage) {
-        if (whichPage < 1 || whichPage > totalPages) return false;
-
-        currentPage = whichPage;
-
-        $(".result-list .movie-iteme").hide().slice((currentPage - 1) * limitPerPage, currentPage * limitPerPage).show();
-
-        $(".result-pagi li").slice(1, -1).remove();
-
-        getPageList(totalPages, currentPage, paginationSize).forEach(item => {
-            $("<li>").addClass("page-item").addClass(item ? "current-page" : "dots").toggleClass("pagi-active", item === currentPage).append($("<a>").addClass("page-link").attr({href: "javascript:void(0)"}).text(item || "...")).insertBefore(".result-pagi .next-page")
-        });
-
-        $(".result-pagi .previous-page").toggleClass("pagi-disable", currentPage === 1);
-        $(".result-pagi .next-page").toggleClass("pagi-disable", currentPage === totalPages);
-        return true;
-    }
-
-    $(".result-pagi").append(
-        $("<li>").addClass("page-item").addClass("previous-page").append($("<a>").addClass("page-link").attr({href: "javascript:void(0)"}).text("Prev")),
-        $("<li>").addClass("page-item").addClass("next-page").append($("<a>").addClass("page-link").attr({href: "javascript:void(0)"}).text("Next"))
-    );
-
-    $(".result-list").show();
-    showPage(1);
-
-    $(document).on("click", ".result-pagi li.current-page:not(.pagi-active)", function() {
-        return showPage(+$(this).text());
-    });
-
-    $(".result-pagi .next-page").on("click", function() {
-        return showPage(currentPage + 1);
-    });
-
-    $(".result-pagi .next-page").on("click", function() {
-        return setHoverEffect(resultList);
-    });
-
-    $(".result-pagi .previous-page").on("click", function() {
-        return showPage(currentPage - 1);
-    });
-
-    $(".result-pagi .previous-page").on("click", function() {
-        return setHoverEffect(resultList);
     });
 });

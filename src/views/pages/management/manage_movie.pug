@@ -2,45 +2,56 @@ doctype html
 html(lang="en")
   head
     meta(charset='UTF-8')
-    meta(http-equiv='X-UA-Compatible' content='IE=edge')
     meta(name='viewport' content='width=device-width, initial-scale=1.0', required)
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js')
+    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css")
     link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous")
     // --======== CSS=======
-    link(rel="stylesheet" type="text/css" href="/css/id.css")
     link(rel="stylesheet" type="text/css" href="/css/admin.css")
+    link(rel="stylesheet" type="text/css" href="/css/id.css")
     // --===== Iconscout CSS =====
     link(rel='stylesheet' href='https://unicons.iconscout.com/release/v4.0.0/css/line.css')
     title #{ title }
   body
-    nav
-      .menuitems
-        ul.nav-links
-          li
-            a(href='/management/users')
-              span.link-name Manage user
-          li
-            a(href='/management/movies') 
-              span.link-name Manage movie
-          li
-            a(href='/management/comments')
-              span.link-name Manage comment
-
-    section.dashboard
-        .top
-          h1.uil.uil-bars.sidebar-toggle
-        if typeof alertMessage !== 'undefined'
-          #error-message.alert.alert-info.d-none(role='alert') #{alertMessage.message}
-        .dash-content  
+    .wrapper
+      .header
+        .header-menu
+          .sidebar-btn
+            i.bi.bi-list
+          .title Management Side
+          .dropdown
+            button.btn.btn-outline-light.dropdown-toggle(type='button', data-bs-toggle='dropdown', aria-expanded='false')
+              i.bi.bi-person-fill
+            .dropdown-menu.dropdown-menu-dark
+              a.dropdown-item(href='/account/signout')
+                i.bi.bi-box-arrow-right
+                |  Sign Out
+      .sidebar
+        .sidebar-menu
+          li.item
+            a.menu-btn(href="/management/users")
+              i.bi.bi-person-lines-fill
+              span Manage user
+          li.item.active
+            a.menu-btn(href="/management/movies")
+              i.bi.bi-film
+              span Manage movie
+          li.item
+            a.menu-btn(href="/management/comments")
+              i.bi.bi-chat-dots-fill
+              span Manage comment
+      .main-container
+        .dash-content
           .title
-            i.uil.uil-clock-three
-            span.text User list
-          .input-group
-            i.uil.uil-search
-            input(type='search' placeholder='Search Data...')
-          .feture 
-            button#btn-add.btn.btn-info(type='button', data-bs-toggle='modal', data-bs-target='#addMovieModal') Add 
-            button#btn-delete.btn.btn-danger(type='button') Delete 
+            span.text.text-success.border-start.border-3.border-success.ps-4 Movie list
+          .option
+            .input-group.my-3
+              i.uil.uil-search.m-2
+              span(style="width: 90%")
+                input(type='search' placeholder='Search User...')
+            .action-btn
+              button#btn-add.btn.btn-info.my-3.me-4(type='button', data-bs-toggle='modal', data-bs-target='#addMovieModal') Add 
+              button#btn-delete.btn.btn-danger.my-3(type='button') Delete 
           .activity
             if movieList && movieList.length > 0
               table
@@ -91,7 +102,7 @@ html(lang="en")
                         .img-hide #{ movie.image }  
                         .video-hide #{ movie.video }   
         .pop-ups 
-            // Add Movie Modal
+            //- Add Movie Modal
             #addMovieModal.modal.fade(tabindex='-1', aria-labelledby='exampleModalLabel', aria-hidden='true')
                 .modal-dialog
                     .modal-content
@@ -99,54 +110,52 @@ html(lang="en")
                             h5#exampleModalLabel.modal-title Add Movie Form
                             button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
                         .modal-body
-                          form#addMovieForm(action='/management/movies/add', method='POST', enctype="multipart/form-data")
-                              .form-floating.mb-3
-                                  input#titleMovie.form-control(type='text', name='title', required)
-                                  label(for='titleMovie') Title 
-                              .form-floating.mb-3
-                                  textarea#descriptionMovie.form-control(rows="5", name='description', required)
-                                  label(for='descriptionMovie') Description 
-                              .row.group-input.mb-3 
-                                  .col.form-floating
-                                      input#ratingMovie.form-control(type='number', step="0.1", min="0.0", max="10.0", name='rating', required)
-                                      label(for='ratingMovie') Rating 
-                                  .col.form-floating
-                                      input#countryMovie.form-control(type='text', name='country', required)
-                                      label(for='countryMovie') Country 
-                              .row.group-input.mb-3 
-                                  .col.form-floating
-                                      input#durationMovie.form-control(type='time', name='duration', step="60", min="00:30", max="03:00", required)
-                                      label(for='durationMovie') Duration 
-                                  .col.form-floating
-                                      input#releaseMovie.form-control(type='date', name='release', required)
-                                      label(for='releaseMovie') Release   
-                              .row.group-input.mb-3 
-                                  .col.form-floating
-                                      input#imageMovie.form-control(type='file', name='image', required)
-                                      label(for='imageMovie') Image 
-                                  .col.form-floating
-                                      input#videoMovie.form-control(type='file', name='video', required)
-                                      label(for='videoMovie') Video
-                              .row.group-input.mb-3 
-                                  .col.form-floating
-                                      input#directorMovie.form-control(type='text', name='director', required)
-                                      label(for='directorMovie') Director 
-                                  .col.form-floating
-                                      input#producerMovie.form-control(type='text', name='producer', required)
-                                      label(for='producerMovie') Producer
-                              .form-floating.mb-3
-                                  input#actorMovie.form-control(type='text', name='actorList', required)
-                                  label(for='actorMovie') Actor 
-                                  small#help.form-text Split by ', '
-                              .form-floating.mb-3
-                                  input#gerneMovie.form-control(type='text', name='gerneList', required)
-                                  label(for='gerneMovie') Gerne 
-                                  small#help.form-text Split by ', '
-                              button.btn.btn-primary(type='submit') Submit
-            // More Infor Modal
+                            form#addMovieForm(action='movies/add', method='POST', enctype="multipart/form-data")
+                                .form-floating.mb-3
+                                    input#titleMovie.form-control(type='text', name='title', required)
+                                    label(for='titleMovie') Title 
+                                .form-floating.mb-3
+                                    textarea#descriptionMovie.form-control(rows="5", name='description', required)
+                                    label(for='descriptionMovie') Description 
+                                .row.group-input.mb-3 
+                                    .col.form-floating
+                                        input#ratingMovie.form-control(type='number', step="0.1", min="0.0", max="10.0", name='rating', required)
+                                        label.ms-2(for='ratingMovie') Rating 
+                                    .col.form-floating
+                                        input#countryMovie.form-control(type='text', name='country', required)
+                                        label.ms-2(for='countryMovie') Country 
+                                .row.group-input.mb-3 
+                                    .col.form-floating
+                                        input#durationMovie.form-control(type='time', name='duration', step="60", min="00:30", max="03:00", required)
+                                        label.ms-2(for='durationMovie') Duration 
+                                    .col.form-floating
+                                        input#releaseMovie.form-control(type='date', name='release', required)
+                                        label.ms-2(for='releaseMovie') Release   
+                                .form-floating.mb-3
+                                        input#imageMovie.form-control(type='file', name='image', required)
+                                        label(for='imageMovie') Image
+                                .form-floating.mb-3
+                                        input#videoMovie.form-control(type='file', name='video', required)
+                                        label(for='videoMovie') Video
+                                .row.group-input.mb-3 
+                                    .col.form-floating
+                                        input#directorMovie.form-control(type='text', name='director', required)
+                                        label.ms-2(for='directorMovie') Director 
+                                    .col.form-floating
+                                        input#producerMovie.form-control(type='text', name='producer', required)
+                                        label.ms-2(for='producerMovie') Producer
+                                .form-floating.mb-3
+                                    input#actorMovie.form-control(type='text', name='actorList', required)
+                                    label(for='actorMovie') Actor 
+                                    small#help.form-text.text-warning.ms-3 Split by ','
+                                .form-floating.mb-3
+                                    input#gerneMovie.form-control(type='text', name='gerneList', required)
+                                    label(for='gerneMovie') Gerne 
+                                    small#help.form-text.text-warning.ms-3 Split by ','
+                                button.btn.btn-primary(type='submit') Submit
+            //- More Infor Modal
             #moreInforModal.modal.fade(tabindex='-1', aria-labelledby='exampleModalLabel', aria-hidden='true')
                 .modal-dialog
-                    #error-message-s.alert.alert-danger.d-none(role='alert')
                     .modal-content
                         .modal-header
                             h5.modal-title Movie Information  
@@ -160,36 +169,37 @@ html(lang="en")
                                     input#titleUpdateMovie.form-control(type='text', name='updateTitle')
                                     label(for='titleUpdateMovie') Title 
                                 .form-floating.mb-3
-                                    textarea#descriptionUpdateMovie.form-control(rows="5", name='updateDescription')
-                                    label(for='descriptionUpdateMovie') Description 
+                                    textarea#descriptionUpdateMovie.form-control(rows="5", name='updateDescription' style="height:fit-content")
+                                    label(for='descriptionUpdateMovie') Description
                                 .row.group-input.mb-3 
                                     .col.form-floating
-                                        input#ratingUpdateMovie.form-control(type='number', step="0.1", min="0.0", max="10.0", name='updateRating')
-                                        label(for='ratingUpdateMovie') Rating 
+                                        input#ratingUpdateMovie.form-control(type='number', step="0.1", min="0.0", max="10.0", name='updateRating' style="padding-top:2rem")
+                                        label.ms-2(for='ratingUpdateMovie') Rating 
                                     .col.form-floating
-                                        input#countryUpdateMovie.form-control(type='text', name='updateCountry', disabled, readonly)
-                                        label(for='countryUpdateMovie') Country 
+                                        input#countryUpdateMovie.form-control(type='text', name='updateCountry', disabled, readonly style="padding-top:2rem")
+                                        label.ms-2(for='countryUpdateMovie')
+                                          |Country 
                                 .row.group-input.mb-3 
                                     .col.form-floating
-                                        input#durationUpdateMovie.form-control(type='time', name='updateDuration', step="60", min="00:30", max="03:00")
-                                        label(for='durationUpdateMovie') Duration 
+                                        input#durationUpdateMovie.form-control(type='time', name='updateDuration', step="60", min="00:30", max="03:00" style="padding-top:2rem")
+                                        label.ms-2(for='durationUpdateMovie') Duration 
                                     .col.form-floating
-                                        input#releaseUpdateMovie.form-control(type='date', name='updateRelease')
-                                        label(for='releaseUpdateMovie') Release   
+                                        input#releaseUpdateMovie.form-control(type='date', name='updateRelease' style="padding-top:2rem")
+                                        label.ms-2(for='releaseUpdateMovie') Release   
                                 .row.group-input.mb-3 
                                     .col.form-floating
-                                        input#imageUpdateMovie.form-control(type='text', name='updateImage', disabled, readonly)
-                                        label(for='imageUpdateMovie') Image 
+                                        input#imageUpdateMovie.form-control(type='text', name='updateImage', disabled, readonly style="padding-top:2rem")
+                                        label.ms-2(for='imageUpdateMovie') Image 
                                     .col.form-floating
-                                        input#videoUpdateMovie.form-control(type='text', name='updateVideo', disabled, readonly)
-                                        label(for='videoUpdateMovie') Video
+                                        input#videoUpdateMovie.form-control(type='text', name='updateVideo', disabled, readonly style="padding-top:2rem")
+                                        label.ms-2(for='videoUpdateMovie') Video
                                 .row.group-input.mb-3 
                                     .col.form-floating
-                                        input#directorUpdateMovie.form-control(type='text', name='updateDirector', disabled, readonly)
-                                        label(for='directorUpdateMovie') Director 
+                                        input#directorUpdateMovie.form-control(type='text', name='updateDirector', disabled, readonly style="padding-top:2rem")
+                                        label.ms-2(for='directorUpdateMovie') Director 
                                     .col.form-floating
-                                        input#producerUpdateMovie.form-control(type='text', name='updateProducer', disabled, readonly)
-                                        label(for='producerUpdateMovie') Producer
+                                        input#producerUpdateMovie.form-control(type='text', name='updateProducer', disabled, readonly style="padding-top:2rem")
+                                        label.ms-2(for='producerUpdateMovie') Producer
                                 .form-floating.mb-3
                                     input#actorUpdateMovie.form-control(type='text', name='updateActorList', disabled, readonly)
                                     label(for='actorUpdateMovie') Actor 
@@ -197,31 +207,18 @@ html(lang="en")
                                     input#gerneUpdateMovie.form-control(type='text', name='updateGerneList', disabled, readonly)
                                     label(for='gerneUpdateMovie') Gerne 
                                 button.btn.btn-primary(type='submit') Submit
-                        
-    // Bootstrap 5 JS
+        //- placeholder
+        p.p-5(style="color:transparent") placeholder
+
+    //- Bootstrap 5 JS
     script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js')   
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js')
     script(src='/js/tableAction.js')
-    script(src="/js/manageMovie.js") 
-    
+    script(src="/js/manageMovie.js")
     script.
-        $(document).ready(function() {
-            $('#moreInforForm').submit(function(event) {
-                event.preventDefault();
-                $.ajax({
-                    url: '/management/movies/update',
-                    method: 'POST',
-                    data: $('#moreInforForm').serialize(),
-                    success: function(response) {
-                        alert('Updated Movie.');
-                        setTimeout(function() {
-                            window.location.reload();
-                        }, 1000);
-                    },
-                    error: function(xhr, status, error) {
-                        $('#error-message-s').text(xhr.responseJSON.message);
-                        $('#error-message-s').removeClass('d-none');
-                    }
-                });
-            });
-        });
+      $(document).ready(function() {
+        $(".sidebar-btn").click(function() {
+          $(".wrapper").toggleClass("mycollapse");
+        })
+      })
+    

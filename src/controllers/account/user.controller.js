@@ -105,7 +105,7 @@ module.exports.watchList = async (req, res) => {
   });
 
   const user = await User.findByPk(req.userId, {
-    attributes: ["id", "user_name"],
+    attributes: ["id", "user_name", "email"],
   });
   const verified = true;
   // movieInWatchList.forEach(movie => {
